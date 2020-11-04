@@ -1,0 +1,21 @@
+{
+  "devDependencies": {
+    "nw-builder": "^3.5.7",
+    "webassembly": "^0.11.0"
+  },
+  "scripts": {
+    "dev": "nw src/",
+    "build": "nwbuild --platforms win32 --buildDir build/ src/",
+    "compile": "wa compile -o src/script/laska.wasm code/link.c",
+    "test": "gcc -ansi -pedantic -o build/tests/test.exe -Wall code/main.c"
+  },
+  "name": "mini-laska",
+  "version": "0.2.0",
+  "main": "index.js",
+  "author": "Vettori Massimo",
+  "license": "BSD-2-Clause",
+  "private": true,
+  "dependencies": {
+    "nw": "0.49.1-sdk"
+  }
+}
