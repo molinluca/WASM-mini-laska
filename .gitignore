@@ -1,3 +1,5 @@
 node_modules
 .idea
 build
+cmake-build-debug
+code/*.txt
