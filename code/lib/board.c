@@ -8,7 +8,6 @@
 void reset() {
     short i=0;
     short y, x;
-    /*createList(&pieces);*/
     for (y=0; y<7; y++) {
         for (x = 0; x < 7; x++) {
             if (y < 3 && (x+y)%2 == 0) {

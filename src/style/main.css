@@ -31,7 +31,7 @@ table {
 .board_cell {
    width: 75px;
    height: 75px;
-   border: 3px solid #272727;
+   border: 3px solid #2b2b2b;
    background-color: #222222;
    transition: .25s;
    justify-content: center;

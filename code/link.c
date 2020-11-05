@@ -26,26 +26,6 @@ short do_move(short p, short i) {
 }
 
 export
-int *get_cell(int y, int x) {
-   Cell *c;
-   Piece *p;
-   buffered_cell[0] = 0;
-   buffered_cell[1] = 0;
-   buffered_cell[2] = 0;
-   if (y<0 || y>6 || x<0 || x>6) return buffered_cell;
-
-   c = cellAt(y, x);
-   if (c == NULL) return buffered_cell;
-   p = getPiece(c->piece);
-   if (p == NULL) return buffered_cell;
-
-   buffered_cell[0] = p->tower[0];
-   buffered_cell[1] = p->tower[1];
-   buffered_cell[2] = p->tower[2];
-   return buffered_cell;
-}
-
-export
 int *get_piece(int i) {
    Piece *p;
    buffered_piece[0] = -1;
@@ -66,13 +46,18 @@ int *get_piece(int i) {
 }
 
 export
-void promote_piece(int i) {
-    promote(getPiece(i));
+void new_game(int type) {
+   initGame((short) type);
 }
 
 export
-void new_game() {
-   reset();
+int get_game_state() {
+    return (int) game_state;
+}
+
+export
+void end_game() {
+    quitGame();
 }
 
 #endif

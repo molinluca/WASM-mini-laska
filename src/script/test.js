@@ -12,19 +12,9 @@ wasm.load("script/laska.wasm").then((module) => {
    laska = module.exports;
    mem = module.memory;
 
-   alert("Game assets are LOADED!");
-   laska.new_game();
+   console.warn("Game assets are LOADED!");
+   laska.new_game(10);
    fill();
-
-   let i = 0;
-   let time = setInterval(() => {
-      if (i == game.moves.length-1) clearInterval(time);
-      console.warn("Moving piece ... ");
-      move(game.moves[i][0], game.moves[i][1]);
-      i++;
-   }, 250);
-
-
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +28,6 @@ function fill() {
          let y = mem.getInt(ptr);
          let x = mem.getInt(ptr+4);
          let tower = [mem.getInt(ptr+8), mem.getInt(ptr+12), mem.getInt(ptr+16)];
-         console.log(y, x);
 
          document.querySelectorAll(".board_cell")[y*7 + x].title = `Piece ${i}`;
          for (let j=0; j<3; j++) {
@@ -70,14 +59,9 @@ let iterator = 0;
 function move(p, i) {
    if (!laska || !mem)       return debug("Game assets are not loaded!!!");
    if (isNaN(p) || isNaN(i)) return debug("Cannot parse NON NUMERIC values to move() function");
-
-   setTimeout(() => {
-      laska.do_move(p, i);
-      fill();
-   }, 500*iterator);
-   iterator++;
+   laska.do_move(p, i);
+   fill();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ONLY FOR DEBUG PURPOSES!!!
@@ -91,4 +75,15 @@ function print_piece(i) {
    if (!laska || !mem) return debug("Game assets are not loaded!!!");
    let ptr = laska.get_piece(i);
    console.log(`Piece {y: ${mem.getInt(ptr)}, x: ${mem.getInt(ptr+4)}, tower: [${mem.getInt(ptr+8)}, ${mem.getInt(ptr+12)}, ${mem.getInt(ptr+16)}]}`);
+}
+
+// ONLY FOR DEBUG PURPOSES!!!
+function run_test() {
+   let i = 0;
+   let time = setInterval(() => {
+      if (i == game.moves.length-1) clearInterval(time);
+      console.warn("Moving piece ... ");
+      move(game.moves[i][0], game.moves[i][1]);
+      i++;
+   }, 300);
 }

@@ -1,5 +1,6 @@
 #ifndef _LIST_H_
 #define _LIST_H_
+#include <stdlib.h>
 
 /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 typedef struct Node   { void *data; struct Node *next; }Node;
@@ -11,7 +12,6 @@ typedef struct List   { Node *head; short len; }List;
 int createList(List *v) {
     Node *head = NULL;
     if (v == NULL) {
-        /*warnx("The input List must not be a NULL pointer");*/
         return 0;
     }
 
@@ -89,7 +89,7 @@ void *popList(List *v, int index) {
     void *data = NULL;
     int i      = 0;
 
-    if (index == 0) { /*warnx("Cannot read the HEAD of the List");*/ return NULL; }
+    if (index == 0) { return NULL; }
 
     while (node->next != NULL && i < index) {
         prev = node;
@@ -97,9 +97,9 @@ void *popList(List *v, int index) {
         i++;
     }
 
-    if (node == NULL || prev == NULL) { /*warn("Segmentation occurred during read of the Nodes");*/ return NULL; }
-    if (prev->next != node)           { /*warn("Segmentation occurred during read of the Nodes");*/ return NULL; }
-    if (i != index)                   { /*warn("The index passed as a parameter was out of bounds (%d)", index);*/ return NULL; }
+    if (node == NULL || prev == NULL) { return NULL; }
+    if (prev->next != node)           { return NULL; }
+    if (i != index)                   { return NULL; }
 
     prev->next = node->next;
     data = node->data;
