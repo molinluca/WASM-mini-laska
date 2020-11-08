@@ -4,3 +4,4 @@ build
 cmake*
 code/*.txt
 *.wasm
+list.c

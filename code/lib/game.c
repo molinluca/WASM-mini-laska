@@ -36,16 +36,3 @@ void changeState(short type) {
 void quitGame() {
     game_state = STATE_GAME_NONE;
 }
-
-void playMove(short team, short p, short m) {
-    Piece *piece;
-    if (team != CPU_TEAM && team != USR_TEAM) return;
-    if (p<0 || p>21) return;
-    if (m<0 || m>3) return;
-
-    piece = getPiece(p);
-    if (piece == NULL) return;
-    if (team == CPU_TEAM) calculateAll(CPU_TEAM);
-    if (team == USR_TEAM) calculateAll(USR_TEAM);
-    doMove(piece, m);
-}

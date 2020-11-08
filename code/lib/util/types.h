@@ -12,8 +12,9 @@
 #define VOID_CELL    (short) -1
 
 /* Teams */
-#define CPU_TEAM     (short)  0
-#define USR_TEAM     (short)  1
+#define CPU_TEAM (short) 0
+#define USR_TEAM (short) 1
+#define DISPOSED (short) 99
 
 /* Game states */
 #define STATE_USR_NO_MOVES  (short) 0
@@ -25,7 +26,7 @@
 #define STATE_GAME_PVE_HIGH (short) 12
 #define STATE_GAME_NONE     (short) 99
 
-/* Structs variables */
+/* Structs types */
 typedef struct Coor  { short y, x; }Coor;
 typedef struct Cell  { short piece; }Cell;
 typedef struct Move  { Coor start, target; Cell hit; short score; }Move;
@@ -35,5 +36,6 @@ typedef struct Piece { short y, x; short tower[3]; Move moves[4]; }Piece;
 static Cell  board[7][7];
 static Piece pieces[22];
 static short game_state = STATE_GAME_NONE;
+static short game_turn  = USR_TEAM;
 
 #endif

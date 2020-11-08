@@ -31,21 +31,21 @@ function fill() {
 
          document.querySelectorAll(".board_cell")[y*7 + x].title = `Piece ${i}`;
          for (let j=0; j<3; j++) {
-            if (tower[j]==1 || tower[j]==2) {
+            if (tower[j] === 1 || tower[j] === 2) {
                document.querySelectorAll(".board_cell")[y*7 + x].innerHTML += '<div class="piece CPU"><div>';
-            } else if (tower[j]==-1 || tower[j]==-2) {
+            } else if (tower[j] === -1 || tower[j] === -2) {
                document.querySelectorAll(".board_cell")[y*7 + x].innerHTML += '<div class="piece USR"><div>';
             }
 
-            if (tower[j]%2 == 0 && j == 0)
+            if (tower[j]%2 === 0 && j === 0)
                document.querySelectorAll(".board_cell")[y*7 + x].classList.add("promoted");
-            else if (j == 0)
+            else if (j === 0)
                document.querySelectorAll(".board_cell")[y*7 + x].classList.remove("promoted");
          }
       }
    }
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function clear_board() {
    for (let i=0; i<49; i++) {
       document.querySelectorAll(".board_cell")[i].title = "";
@@ -53,9 +53,7 @@ function clear_board() {
       document.querySelectorAll(".board_cell")[i].innerHTML = "";
    }
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-let iterator = 0;
 function move(p, i) {
    if (!laska || !mem)       return debug("Game assets are not loaded!!!");
    if (isNaN(p) || isNaN(i)) return debug("Cannot parse NON NUMERIC values to move() function");

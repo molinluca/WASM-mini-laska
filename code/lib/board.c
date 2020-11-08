@@ -85,6 +85,15 @@ Piece *getPiece(int i) {
    return &pieces[i];
 }
 
+/* Returns the team witch the Piece belongs to
+ * NOTE: if the piece is NULL or disposed it returns a DISPOSED state*/
+int getTeam(Piece *p) {
+    if (p == NULL) return DISPOSED;
+    if (p->tower[0] == CPU || p->tower[0] == PROMOTED_CPU) return CPU_TEAM;
+    if (p->tower[0] == USR || p->tower[0] == PROMOTED_USR) return USR_TEAM;
+    return DISPOSED;
+}
+
 /* Disposes the selected Piece setting the board coordinates to negative numbers (-1, -1) and the tower to an empty state
  * NOTE: it doesn't do anything if the given Piece pointer is NULL*/
 void disposePiece(Piece *p) {
