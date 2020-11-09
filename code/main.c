@@ -7,7 +7,7 @@ void run_test() {
 
 int main() {
     run_test();
-    printf("Everything works...\n");
+    printf("Everything works... press ENTER to quit\n");
     getchar();
     return 0;
 }
