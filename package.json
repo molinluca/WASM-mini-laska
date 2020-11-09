@@ -14,7 +14,7 @@
   "main": "index.js",
   "author": "Vettori Massimo",
   "license": "BSD-2-Clause",
-  "private": true,
+  "private": false,
   "dependencies": {
     "nw": "0.49.1-sdk"
   }

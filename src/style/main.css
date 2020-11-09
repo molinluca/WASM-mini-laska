@@ -70,12 +70,12 @@ tr:nth-of-type(even) .board_cell:nth-of-type(even):hover {
 .piece.USR {
    border: 3px solid rgb(229, 241, 64);
    background-color:rgba(212, 223, 63, 0.7);
-   box-shadow: 0 0 20px 5px rgba(241, 229, 64, .5);
+   /*box-shadow: 0 0 20px 5px rgba(241, 229, 64, .5);*/
 }
 .piece.CPU {
    border: 3px solid rgb(223, 78, 34);
    background-color: rgba(223, 62, 34, 0.7);
-   box-shadow: 0 0 20px 5px rgba(223, 78, 34, .7);
+   /*box-shadow: 0 0 20px 5px rgba(223, 78, 34, .7);*/
 }
 
 
