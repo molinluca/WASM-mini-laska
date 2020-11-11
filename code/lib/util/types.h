@@ -9,7 +9,7 @@
 #define PROMOTED_USR (short) -2
 
 /* Cell content */
-#define VOID_CELL    (short) -1
+#define VOID_CELL (short) -1
 
 /* Teams */
 #define CPU_TEAM (short) 0

@@ -21,7 +21,7 @@ short do_move(short p, short i) {
    m = pc->moves[i];
    if (m.score < 1) return 0;
 
-   doMove(pc, i);
+   move(pc, i);
    return 1;
 }
 
@@ -52,12 +52,12 @@ void new_game(int type) {
 
 export
 int get_game_state() {
-    return (int) game_state;
+   return (int) game_state;
 }
 
 export
 void end_game() {
-    quitGame();
+   quitGame();
 }
 
 #endif

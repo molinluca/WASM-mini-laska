@@ -1,7 +1,6 @@
-const wasm = require("webassembly");
-const game = require("script/games/test001.json");
-let laska  = undefined;
-let mem    = undefined;
+const wasm  = require("webassembly");
+let laska   = undefined;
+let mem     = undefined;
 
 const R = 0;
 const L = 1;
@@ -13,7 +12,7 @@ wasm.load("script/laska.wasm").then((module) => {
    mem = module.memory;
 
    console.warn("Game assets are LOADED!");
-   laska.new_game(10);
+   laska.new_game(STATE_GAME_PVP);
    fill();
 });
 
@@ -23,20 +22,23 @@ function fill() {
    clear_board();
    for (let i=0; i<22; i++) {
       let ptr = laska.get_piece(i);
-      let content = mem.getInt(ptr);
+      let content = mem.getInt(ptr); /* The first element of the buffered_piece (the y coordinate) */
       if (content >= 0) {
          let y = mem.getInt(ptr);
          let x = mem.getInt(ptr+4);
          let tower = [mem.getInt(ptr+8), mem.getInt(ptr+12), mem.getInt(ptr+16)];
 
          document.querySelectorAll(".board_cell")[y*7 + x].title = `Piece ${i}`;
+         document.querySelectorAll(".board_cell")[y*7 + x].setAttribute("content", i);
+
          for (let j=0; j<3; j++) {
-            if (tower[j] === 1 || tower[j] === 2) {
+            if (tower[j] === CPU || tower[j] === PROMOTED_CPU) {
                document.querySelectorAll(".board_cell")[y*7 + x].innerHTML += '<div class="piece CPU"><div>';
-            } else if (tower[j] === -1 || tower[j] === -2) {
+            } else if (tower[j] === USR || tower[j] === PROMOTED_USR) {
                document.querySelectorAll(".board_cell")[y*7 + x].innerHTML += '<div class="piece USR"><div>';
             }
 
+            /* If the first piece of the tower is promoted... */
             if (tower[j]%2 === 0 && j === 0)
                document.querySelectorAll(".board_cell")[y*7 + x].classList.add("promoted");
             else if (j === 0)
