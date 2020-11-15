@@ -66,24 +66,32 @@ void calculate(Piece *p) {
     if (p == NULL) return;
     if (isDisposed(p)) return;
 
-    if (p->tower[0] % 2 == 0) {
-        /* If the given Piece's head is promoted */
-        assertMove(&p->moves[0], p->y, p->x, mods[0][0], mods[0][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[1][0], mods[1][1]);
-        assertMove(&p->moves[2], p->y, p->x, mods[2][0], mods[2][1]);
-        assertMove(&p->moves[3], p->y, p->x, mods[3][0], mods[3][1]);
-    } else if (p->tower[0] < 0) {
+    if (p->tower[0] == USR || p->tower[0] == PROMOTED_USR) {
         /* If is a Player Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[2][0], mods[2][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[3][0], mods[3][1]);
-        resetMove(&p->moves[2]);
-        resetMove(&p->moves[3]);
-    } else {
+        assertMove(&p->moves[0], p->y, p->x, mods[3][0], mods[3][1]); /*FRONT_LEFT*/
+        assertMove(&p->moves[1], p->y, p->x, mods[2][0], mods[2][1]); /*FRONT_RIGHT*/
+
+        /* If is promoted */
+        if (p->tower[0] == PROMOTED_USR) {
+            assertMove(&p->moves[2], p->y, p->x, mods[1][0], mods[1][1]); /*BACK_LEFT*/
+            assertMove(&p->moves[3], p->y, p->x, mods[0][0], mods[0][1]); /*BACK_RIGHT*/
+        } else {
+            resetMove(&p->moves[2]);
+            resetMove(&p->moves[3]);
+        }
+    } else if (p->tower[0] == CPU || p->tower[0] == PROMOTED_CPU) {
         /* If is a Computer Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[0][0], mods[0][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[1][0], mods[1][1]);
-        resetMove(&p->moves[2]);
-        resetMove(&p->moves[3]);
+        assertMove(&p->moves[0], p->y, p->x, mods[1][0], mods[1][1]); /*FRONT_LEFT*/
+        assertMove(&p->moves[1], p->y, p->x, mods[0][0], mods[0][1]); /*FRONT_RIGHT*/
+
+        /* If is promoted */
+        if (p->tower[0] == PROMOTED_CPU) {
+            assertMove(&p->moves[2], p->y, p->x, mods[3][0], mods[3][1]); /*BACK_LEFT*/
+            assertMove(&p->moves[3], p->y, p->x, mods[2][0], mods[2][1]); /*BACK_RIGHT*/
+        } else {
+            resetMove(&p->moves[2]);
+            resetMove(&p->moves[3]);
+        }
     }
 }
 

@@ -1,6 +1,8 @@
 node_modules
 .idea
+.vscode
 build
 cmake*
 code/*.txt
-*.wasm
+junk
+old

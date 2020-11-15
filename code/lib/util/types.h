@@ -16,6 +16,12 @@
 #define USR_TEAM (short) 1
 #define DISPOSED (short) 99
 
+/* Movement */
+#define FRONT_LEFT  (short) 0
+#define FRONT_RIGHT (short) 1
+#define BACK_LEFT   (short) 2
+#define BACK_RIGHT  (short) 3
+
 /* Game states */
 #define STATE_USR_NO_MOVES  (short) 0
 #define STATE_CPU_NO_MOVES  (short) 1

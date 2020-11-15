@@ -20,6 +20,8 @@ void initGame(short type) {
     }
 
     reset();
+    calculateAll(CPU_TEAM);
+    calculateAll(USR_TEAM);
 }
 
 void changeState(short type) {
