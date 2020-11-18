@@ -8,6 +8,9 @@ class LaskaGame {
       this.mem     = memory;
       this.focus   = undefined;
 
+      document.querySelector("#end-state").removeAttribute("blue");
+      document.querySelector("#end-state").removeAttribute("red");
+
       this.ANSI.new_game(type);
       this.fill();
    }
@@ -16,6 +19,22 @@ class LaskaGame {
    *  NOTE: if the state describes a game ending, it will be shown */
    update_state() {
       this.state = this.ANSI.get_game_state();
+      switch(this.state) {
+         case STATE_USR_NO_MOVES:
+            this.end_match({loser: USR_TEAM, has_pieces_left: true});
+            break;
+         case STATE_CPU_NO_MOVES:
+            this.end_match({loser: CPU_TEAM, has_pieces_left: true});
+            break;
+         case STATE_USR_NO_PIECES:
+            this.end_match({loser: USR_TEAM, has_pieces_left: false});
+            break;
+         case STATE_CPU_NO_PIECES:
+            this.end_match({loser: CPU_TEAM, has_pieces_left: false});
+            break;
+
+         default: return;
+      }
    }
 
    /* Fills the game table with the Pieces in the right positions */
@@ -66,10 +85,12 @@ class LaskaGame {
    /* Calls the "ANSI C" move function in order to move a piece in the selected direction */
    play(piece, direction) {
       if (isNaN(piece) || isNaN(direction)) throw new Error("Trying to use NON NUMERIC values to move a Piece");
-      this.ANSI.do_move(piece, direction);
-      this.fill();
-      this.unfocus();
-      this.update_state();
+      let moved = this.ANSI.do_move(piece, direction);
+      if (moved) {
+         this.fill();
+         this.unfocus();
+         this.update_state();
+      }
    }
 
    /* Either selects a piece to move or tries to move it */
@@ -92,14 +113,14 @@ class LaskaGame {
       if (piece === undefined || piece === null) throw Error("Undefined piece");
       if (isNaN(piece)) throw Error("Invalid piece");
       if (piece < 0 || piece > 21) throw Error("Invalid piece");
-      
+
       let found = 0;
-      let ptr      = this.ANSI.get_moves(piece);
-      
+      let ptr   = this.ANSI.get_moves(piece);
+
       for (let i=0; i<4; i++) {
          let y = this.mem.getInt(ptr + (2*i)*INT);
          let x = this.mem.getInt(ptr + (2*i+1)*INT);
-         
+
          if (x >= 0 && y >= 0) {
             let target = document.querySelectorAll(".board_cell")[y*7 + x];
             if (!!target) {
@@ -108,7 +129,7 @@ class LaskaGame {
             }
          }
       }
-      
+
       console.debug("LaskaGame: evaluating moves for piece "+piece+"... Found "+found);
       if (found > 0) {
          document.querySelector(`.board_cell[piece="${piece}"]`).setAttribute("main", this.piece);
@@ -129,7 +150,32 @@ class LaskaGame {
       }
    }
 
+   /* Completely deletes the game session */
    destroy() {
       this.ANSI.end_game();
+   }
+
+   /* End game state handler */
+   end_match({loser, has_pieces_left}) {
+      this.destroy();
+      let text = "The match concluded in a <span>tie</span>... No player has <span>legal moves</span> left";
+      document.querySelector(".container").classList.add("game-over");
+      if (loser === CPU_TEAM) {
+        if (has_pieces_left)
+          text = "The <span>BLUE PLAYER</span> won the match... The other player's pieces <span>can't move</span>"
+        else
+          text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no pieces left</span>"
+        document.querySelector("#end-state .message .text").innerHTML = text;
+        document.querySelector("#end-state").setAttribute("blue", true);
+      } else if (loser === USR_TEAM) {
+
+        if (has_pieces_left)
+          text = "The <span>RED PLAYER</span> won the match... The other player's pieces <span>can't move</span>"
+        else
+          text = "The <span>RED PLAYER</span> won the match... The other player has <span>no pieces left</span>"
+
+        document.querySelector("#end-state .message .text").innerHTML = text;
+        document.querySelector("#end-state").setAttribute("red", true);
+      }
    }
 }

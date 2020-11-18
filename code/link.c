@@ -15,8 +15,7 @@ short do_move(short p, short i) {
 
    pc = getPiece(p);
    if (pc == NULL) return 0;
-   calculateAll(USR_TEAM);
-   calculateAll(CPU_TEAM);
+   calculate(pc);
 
    m = pc->moves[i];
    if (m.score < 1) return 0;
@@ -61,9 +60,9 @@ int *get_moves(int j) {
    }
 
    if (j < 0 || j > 21) return buffered_moves;
-   calculateAll(CPU_TEAM);
-   calculateAll(USR_TEAM);
+
    p = getPiece(j);
+   calculate(p);
 
    if (p == NULL) return buffered_moves;
    for (i=0; i<4; i++) {
