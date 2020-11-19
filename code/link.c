@@ -1,7 +1,7 @@
 #ifndef _LIB_LASKA_
 #define _LIB_LASKA_
 #include <webassembly.h>
-#include "lib/game.c"
+#include "headers/game.h"
 
 int buffered_piece[5];
 int buffered_moves[8];
@@ -20,7 +20,7 @@ short do_move(short p, short i) {
    m = pc->moves[i];
    if (m.score < 1) return 0;
    move(pc, i);
-   
+
    return 1;
 }
 

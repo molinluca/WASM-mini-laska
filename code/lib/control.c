@@ -1,8 +1,4 @@
-#ifndef _CONTROL_C_
-#define _CONTROL_C_
-#include "board.c"
-
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+#include "../headers/control.h"
 
 /* Resets a given Move, setting it to a blank state */
 void resetMove(Move *m) {
@@ -18,8 +14,12 @@ void resetMove(Move *m) {
 /* Returns if 2 pieces are in different teams
  * NOTE: the returned value is a boolean-like, either 0 or 1 */
 int areEnemies(int a, int b) {
+    Piece *pa, *pb;
     if (a < 0 || a > 21 || b < 0 || b > 21) return 0;
-    return pieces[a].tower[0] * pieces[b].tower[0] < 0;
+    pa = getPiece(a);
+    pb = getPiece(b);
+    if (pa == NULL || pb == NULL) return 0;
+    return getTeam(pa) != getTeam(pb);
 }
 
 /* Fills the pointer Move given as parameter only if it leads to a legal Move
@@ -99,9 +99,12 @@ void calculate(Piece *p) {
  * NOTE: The team indicator must be either the CPU_TEAM or the USR_TEAM */
 void calculateAll(int team) {
     int i;
+    Piece *p;
     for (i=0; i<22; i++) {
-        if (team == CPU_TEAM && pieces[i].tower[0] > 0) calculate(&pieces[i]);
-        if (team == USR_TEAM && pieces[i].tower[0] < 0) calculate(&pieces[i]);
+       p = getPiece(i);
+       if (p != NULL) {
+          if (getTeam(p) == team) calculate(p);
+       }
     }
 }
 
@@ -131,6 +134,3 @@ void move(Piece *p, int i) {
         conquer(p, getPiece(p->moves[i].hit.piece));
     }
 }
-
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-#endif
