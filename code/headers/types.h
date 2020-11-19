@@ -39,6 +39,4 @@ typedef struct Cell  { short piece; }Cell;
 typedef struct Move  { Coor start, target; Cell hit; short score; }Move;
 typedef struct Piece { short y, x; short tower[3]; Move moves[4]; }Piece;
 
-
-
 #endif

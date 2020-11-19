@@ -3,9 +3,6 @@
 #include "board.h"
 /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-void resetMove(Move *m);
-int  areEnemies(int a, int b);
-void assertMove(Move *m, int y, int x, int modY, int modX);
 void calculate(Piece *p);
 void calculateAll(int team);
 void move(Piece *p, int i);
