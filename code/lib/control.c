@@ -1,8 +1,4 @@
-#ifndef _CONTROL_H_
-#define _CONTROL_H_
-#include "board.c"
-
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+#include "../headers/control.h"
 
 /* Resets a given Move, setting it to a blank state */
 void resetMove(Move *m) {
@@ -18,8 +14,12 @@ void resetMove(Move *m) {
 /* Returns if 2 pieces are in different teams
  * NOTE: the returned value is a boolean-like, either 0 or 1 */
 int areEnemies(int a, int b) {
+    Piece *pa, *pb;
     if (a < 0 || a > 21 || b < 0 || b > 21) return 0;
-    return pieces[a].tower[0] * pieces[b].tower[0] < 0;
+    pa = getPiece(a);
+    pb = getPiece(b);
+    if (pa == NULL || pb == NULL) return 0;
+    return getTeam(pa) != getTeam(pb);
 }
 
 /* Fills the pointer Move given as parameter only if it leads to a legal Move
@@ -66,24 +66,32 @@ void calculate(Piece *p) {
     if (p == NULL) return;
     if (isDisposed(p)) return;
 
-    if (p->tower[0] % 2 == 0) {
-        /* If the given Piece's head is promoted */
-        assertMove(&p->moves[0], p->y, p->x, mods[0][0], mods[0][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[1][0], mods[1][1]);
-        assertMove(&p->moves[2], p->y, p->x, mods[2][0], mods[2][1]);
-        assertMove(&p->moves[3], p->y, p->x, mods[3][0], mods[3][1]);
-    } else if (p->tower[0] < 0) {
+    if (p->tower[0] == USR || p->tower[0] == PROMOTED_USR) {
         /* If is a Player Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[2][0], mods[2][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[3][0], mods[3][1]);
-        resetMove(&p->moves[2]);
-        resetMove(&p->moves[3]);
-    } else {
+        assertMove(&p->moves[0], p->y, p->x, mods[3][0], mods[3][1]); /*FRONT_LEFT*/
+        assertMove(&p->moves[1], p->y, p->x, mods[2][0], mods[2][1]); /*FRONT_RIGHT*/
+
+        /* If is promoted */
+        if (p->tower[0] == PROMOTED_USR) {
+            assertMove(&p->moves[2], p->y, p->x, mods[1][0], mods[1][1]); /*BACK_LEFT*/
+            assertMove(&p->moves[3], p->y, p->x, mods[0][0], mods[0][1]); /*BACK_RIGHT*/
+        } else {
+            resetMove(&p->moves[2]);
+            resetMove(&p->moves[3]);
+        }
+    } else if (p->tower[0] == CPU || p->tower[0] == PROMOTED_CPU) {
         /* If is a Computer Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[0][0], mods[0][1]);
-        assertMove(&p->moves[1], p->y, p->x, mods[1][0], mods[1][1]);
-        resetMove(&p->moves[2]);
-        resetMove(&p->moves[3]);
+        assertMove(&p->moves[0], p->y, p->x, mods[1][0], mods[1][1]); /*FRONT_LEFT*/
+        assertMove(&p->moves[1], p->y, p->x, mods[0][0], mods[0][1]); /*FRONT_RIGHT*/
+
+        /* If is promoted */
+        if (p->tower[0] == PROMOTED_CPU) {
+            assertMove(&p->moves[2], p->y, p->x, mods[3][0], mods[3][1]); /*BACK_LEFT*/
+            assertMove(&p->moves[3], p->y, p->x, mods[2][0], mods[2][1]); /*BACK_RIGHT*/
+        } else {
+            resetMove(&p->moves[2]);
+            resetMove(&p->moves[3]);
+        }
     }
 }
 
@@ -91,9 +99,12 @@ void calculate(Piece *p) {
  * NOTE: The team indicator must be either the CPU_TEAM or the USR_TEAM */
 void calculateAll(int team) {
     int i;
+    Piece *p;
     for (i=0; i<22; i++) {
-        if (team == CPU_TEAM && pieces[i].tower[0] > 0) calculate(&pieces[i]);
-        if (team == USR_TEAM && pieces[i].tower[0] < 0) calculate(&pieces[i]);
+       p = getPiece(i);
+       if (p != NULL) {
+          if (getTeam(p) == team) calculate(p);
+       }
     }
 }
 
@@ -123,6 +134,3 @@ void move(Piece *p, int i) {
         conquer(p, getPiece(p->moves[i].hit.piece));
     }
 }
-
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-#endif

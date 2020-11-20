@@ -10,7 +10,8 @@
     "position": "center",
     "toolbar": true,
     "resizable": false,
-    "icon": "./res/icon/icon.png"
+    "icon": "./res/icon/icon.png",
+    "show": false
   },
   "dependencies": {
     "webassembly": "^0.11.0"

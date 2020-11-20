@@ -1,7 +1,7 @@
-#ifndef _BOARD_H_
-#define _BOARD_H_
+#include "../headers/board.h"
 
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+static Cell  board[7][7];
+static Piece pieces[22];
 
 /* First function to run to fully reset the game
  * It generates the 22 Pieces (11 for each team) and placing them in the board */
@@ -12,7 +12,7 @@ void reset() {
         for (x = 0; x < 7; x++) {
             if (y < 3 && (x+y)%2 == 0) {
                 pieces[i].tower[0] = CPU;
-                pieces[i].tower[1] = EMPTY_PIECE;
+                pieces[i].tower[1] = CPU;
                 pieces[i].tower[2] = EMPTY_PIECE;
 
                 pieces[i].y = y;
@@ -21,7 +21,7 @@ void reset() {
                 i++;
             } else if (y > 3 && (x+y)%2 == 0) {
                 pieces[i].tower[0] = USR;
-                pieces[i].tower[1] = EMPTY_PIECE;
+                pieces[i].tower[1] = USR;
                 pieces[i].tower[2] = EMPTY_PIECE;
 
                 pieces[i].y = y;
@@ -64,7 +64,7 @@ void fillCell(int y, int x, Cell c) {
     board[y][x].piece = c.piece;
 }
 
-/* Checks if the pointer to the Piece of the given Cell is NULL. If it is it returns 1
+/* Checks if the pointer to the Piece of the given Cell is NULL. If it is, it returns 1
  * NOTE: if the coordinates are "out of bounds" it returns 1 as well*/
 int isVoid(int y, int x) {
     if (x < 0 || x > 6 || y < 0 || y > 6) return 1;
@@ -131,7 +131,3 @@ void conquer(Piece *a, Piece *b) {
         disposePiece(b);
     }
 }
-
-/*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-#endif

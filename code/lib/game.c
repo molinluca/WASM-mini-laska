@@ -1,6 +1,7 @@
-#include <stdlib.h>
-#include "util/types.h"
-#include "brain.c"
+#include "../headers/game.h"
+
+static short game_state = STATE_GAME_NONE;
+static short game_turn  = USR_TEAM;
 
 void initGame(short type) {
     /* The game must be stopped first in order to init a new one */
@@ -16,6 +17,8 @@ void initGame(short type) {
     }
 
     reset();
+    calculateAll(CPU_TEAM);
+    calculateAll(USR_TEAM);
 }
 
 void changeState(short type) {
