@@ -1,10 +1,10 @@
 #ifndef _LIB_LASKA_
 #define _LIB_LASKA_
 #include <webassembly.h>
-#include "lib/game.c"
+#include "headers/game.h"
 
-int buffered_cell[3];
 int buffered_piece[5];
+int buffered_moves[8];
 
 export
 short do_move(short p, short i) {
@@ -13,16 +13,22 @@ short do_move(short p, short i) {
    if (p > 21 || p < 0) return 0;
    if (i < 0 || i > 3)  return 0;
 
-   calculateAll(CPU_TEAM);
-   calculateAll(USR_TEAM);
-
    pc = getPiece(p);
    if (pc == NULL) return 0;
+   calculate(pc);
+
    m = pc->moves[i];
    if (m.score < 1) return 0;
-
    move(pc, i);
+
    return 1;
+}
+
+export
+void load_moves(int last) {
+   /* TO BE CHANGED */
+   calculateAll(CPU_TEAM);
+   calculateAll(USR_TEAM);
 }
 
 export
@@ -43,6 +49,29 @@ int *get_piece(int i) {
    buffered_piece[3] = p->tower[1];
    buffered_piece[4] = p->tower[2];
    return buffered_piece;
+}
+
+export
+int *get_moves(int j) {
+   int i;
+   Piece *p;
+   for (i=0; i<8; i++) {
+      buffered_moves[i] = -2;
+   }
+
+   if (j < 0 || j > 21) return buffered_moves;
+
+   p = getPiece(j);
+   calculate(p);
+
+   if (p == NULL) return buffered_moves;
+   for (i=0; i<4; i++) {
+      if (!!p->moves[i].score) {
+         buffered_moves[2*i]     = p->moves[i].target.y;
+         buffered_moves[2*i + 1] = p->moves[i].target.x;
+      }
+   }
+   return buffered_moves;
 }
 
 export

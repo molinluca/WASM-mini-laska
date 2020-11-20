@@ -4,12 +4,13 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Mini Laska - WASM edition</title>
-   <link rel="stylesheet" href="style/main.css">
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
    <link rel="stylesheet" href="style/computed/main.min.css">
 
    <script defer src="script/util/types.js"></script>
-   <script defer src="script/io.js"></script>
-   <script defer src="script/link.js"></script>
+   <script defer src="script/main.js"></script>
+   <script defer src="script/engine.js"></script>
 </head>
 <body>
 
@@ -17,75 +18,92 @@
       <div id="message"><span style="color: #ff0000; font-weight: bold;">ERROR:</span> Some error occurred!!! </div>
    </div>
 
-   <div class="container">
-      <div class="board">
-         <div class="menu"></div>
-         <table>
-            <tr>
-               <td class="board_cell"><div class="exotic USR"></div></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-            <tr>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-               <td class="board_cell"></td>
-            </tr>
-         </table>
+   <div id="menu">
+      <div class="selector">
+         <span>Select game type: </span>
+         <div id="type1" class="game-type inactive"><strong>Player vs Player</strong></div>
+         <div id="type2" class="game-type inactive"><strong>Player vs Computer</strong> (base)</div>
+         <div id="type3" class="game-type inactive"><strong>Player vs Computer</strong> (hard)</div>
+         <hr />
+         <div class="game-type" onclick="quit()">Exit</div>
       </div>
+   </div>
+
+   <div class="container inactive">
+      <table>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+         <tr>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+            <td class="board_cell"></td>
+         </tr>
+      </table>
+
+      <div id="end-state">
+         <div class="message">
+            <div class="title">Game Over</div>
+            <div class="text">The match concluded in a <span class="accent">tie</span>. No player has <span class="accent">legal moves</span> left</div>
+            <div class="confirm"><div class="btn">GO BACK</div></div>
+         </div>
+      </div>
+      <div class="abort">Abort game session</div>
    </div>
 </body>
 </html>

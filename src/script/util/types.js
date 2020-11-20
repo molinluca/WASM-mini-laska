@@ -1,3 +1,5 @@
+let Game = undefined;
+
 const CPU          =  1;
 const USR          = -1;
 const PROMOTED_CPU =  2;
@@ -17,3 +19,15 @@ const STATE_GAME_PVP      = 10;
 const STATE_GAME_PVE_LOW  = 11;
 const STATE_GAME_PVE_HIGH = 12;
 const STATE_GAME_NONE     = 99;
+
+
+
+function handle_click(e) {
+   if (!!Game) Game.click(e);
+}
+
+function quit() {
+   const nw = require("nw.gui");
+   let win = nw.Window.get();
+   win.close();
+}
