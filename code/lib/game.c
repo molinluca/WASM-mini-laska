@@ -1,7 +1,6 @@
 #include "../headers/game.h"
 
 static short game_state = STATE_GAME_NONE;
-static short game_turn  = USR_TEAM;
 
 void initGame(short type) {
     /* The game must be stopped first in order to init a new one */
