@@ -27,7 +27,6 @@ function handle_click(e) {
 }
 
 function quit() {
-   const nw = require("nw.gui");
-   let win = nw.Window.get();
-   win.close();
+   const { remote } = require('electron');
+   remote.getCurrentWindow().close();
 }
