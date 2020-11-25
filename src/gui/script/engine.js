@@ -36,7 +36,7 @@ class Engine {
       this.GameInstance.destroy();
       this.GameInstance = undefined;
       this.show_menu();
-      console.debug("Engine: Game instance disposed\n\n");
+      console.debug("Engine: Game instance disposed");
    }
 
    /* Handles the click event of the cell */

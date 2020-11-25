@@ -14,6 +14,7 @@ const createWindow = () => {
     resizable: false,
     icon: "src/res/icon/icon.png",
     show: false,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true
@@ -22,7 +23,6 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile('src/gui/index.html');
-  mainWindow.setMenu(null);
 
   // Then show the window after it has finished loading
   mainWindow.webContents.on('did-finish-load', function() {
