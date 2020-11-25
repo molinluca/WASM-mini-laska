@@ -94,26 +94,38 @@ void *getElementAt(List *l, int index) {
  * NOTE: This functions returns the pointer of the data of the deleted Node
  */
 void *popList(List *l, unsigned index) {
-   Node *node = l->head;
-   Node *prev = NULL;
-   void *data = NULL;
-   int i      = 0;
 
-   /*if (index == 0) { return NULL; }*/
+   if (l != NULL) {
+      Node *node = l->head;
+      Node *prev = NULL;
+      void *data = NULL;
 
-   while (node->next != NULL && i < index) {
-      prev = node;
-      node = node->next;
-      i++;
+      if (l->len < 1) return NULL;
+      if (index == 0) {
+         data = node->data;
+         l->head = node->next;
+         l->len -= 1;
+         free(node);
+         return data;
+      } else {
+         int i = 0;
+         while (node->next != NULL && i < index) {
+            prev = node;
+            node = node->next;
+            i++;
+         }
+
+         if (node == NULL || prev == NULL) { return NULL; }
+         if (prev->next != node)           { return NULL; }
+         if (i != index)                   { return NULL; }
+
+         prev->next = node->next;
+         data = node->data;
+         free(node);
+         l->len -= 1;
+         return data;
+      }
    }
 
-   if (node == NULL || prev == NULL) { return NULL; }
-   if (prev->next != node)           { return NULL; }
-   if (i != index)                   { return NULL; }
-
-   prev->next = node->next;
-   data = node->data;
-   free(node);
-   l->len -= 1;
-   return data;
+   return NULL;
 }

@@ -8,6 +8,7 @@ List *createList();
 void  destroyList(List *l);
 
 int   pushList(List *l, void *data);
+void *popList(List *l, unsigned index);
 void *getElementAt(List *l, int index);
 
 #endif
