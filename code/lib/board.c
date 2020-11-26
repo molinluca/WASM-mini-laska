@@ -12,7 +12,7 @@ void reset() {
         for (x = 0; x < 7; x++) {
             if (y < 3 && (x+y)%2 == 0) {
                 pieces[i].tower[0] = CPU;
-                pieces[i].tower[1] = CPU;
+                pieces[i].tower[1] = EMPTY_PIECE;
                 pieces[i].tower[2] = EMPTY_PIECE;
 
                 pieces[i].y = y;
@@ -21,7 +21,7 @@ void reset() {
                 i++;
             } else if (y > 3 && (x+y)%2 == 0) {
                 pieces[i].tower[0] = USR;
-                pieces[i].tower[1] = USR;
+                pieces[i].tower[1] = EMPTY_PIECE;
                 pieces[i].tower[2] = EMPTY_PIECE;
 
                 pieces[i].y = y;
