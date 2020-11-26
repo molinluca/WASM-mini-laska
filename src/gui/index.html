@@ -14,18 +14,16 @@
 </head>
 <body>
 
-   <div class="alert hidden">
-      <div id="message"><span style="color: #ff0000; font-weight: bold;">ERROR:</span> Some error occurred!!! </div>
-   </div>
-
    <div id="menu">
       <div class="selector">
          <span>Select game type: </span>
-         <div id="type1" class="game-type inactive"><strong>Player vs Player</strong></div>
-         <div id="type2" class="game-type inactive"><strong>Player vs Computer</strong> (base)</div>
-         <div id="type3" class="game-type inactive"><strong>Player vs Computer</strong> (hard)</div>
+         <div id="type1" class="menu-item inactive"><strong>Player vs Player</strong></div>
+         <div id="type2" class="menu-item inactive"><strong>Player vs Computer</strong> (base)</div>
+         <!-- <div id="type3" class="menu-item inactive"><strong>Player vs Computer</strong> (hard)</div> -->
+         <br />
+         <div id="credits" class="menu-item"><strong>Credits</strong></div>
          <hr />
-         <div class="game-type" onclick="quit()">Exit</div>
+         <div id="exit" class="menu-item" onclick="quit()">Exit</div>
       </div>
    </div>
 
