@@ -36,7 +36,7 @@ class Engine {
       this.GameInstance.destroy();
       this.GameInstance = undefined;
       this.show_menu();
-      console.debug("Engine: Game instance disposed\n\n");
+      console.debug("Engine: Game instance disposed");
    }
 
    /* Handles the click event of the cell */
@@ -70,7 +70,6 @@ class Engine {
 /* Entry point, called when the DOM loads */
 document.body.onload = () => {
    const wasm = require("webassembly");
-   const nw   = require("nw.gui");
 
    /* Loads the binary file (the compiled ANSI C code) */
    wasm.load("script/binary/laska.wasm").then((module) => {
@@ -92,7 +91,4 @@ document.body.onload = () => {
       document.querySelector(".abort").addEventListener("click", () => {Game.dispose_game_instance();});
       document.querySelector(".btn").addEventListener("click",   () => {Game.dispose_game_instance();});
    });
-
-   /* After all animations are settled, it shows the window */
-   setTimeout(() => { nw.Window.get().show(); }, 1000);
 }

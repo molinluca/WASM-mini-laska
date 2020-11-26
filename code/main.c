@@ -9,6 +9,5 @@ int main() {
     reset();
     run_test();
     printf("Everything works... press ENTER to quit\n");
-    getchar();
     return 0;
 }
