@@ -121,10 +121,8 @@ void move(Piece *p, int i) {
     p->y = p->moves[i].target.y;
     p->x = p->moves[i].target.x;
 
-    if (p->tower[0] > 0 && p->y == 6)
-        promote(p);
-    if (p->tower[0] < 0 && p->y == 0)
-        promote(p);
+    if (getTeam(p) == CPU_TEAM && p->y == 6) promote(p);
+    if (getTeam(p) == USR_TEAM && p->y == 0) promote(p);
 
     if (p->moves[i].hit.piece == VOID_CELL) return;
     if (!isDisposed(getPiece(p->moves[i].hit.piece))) {

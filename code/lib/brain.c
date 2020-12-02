@@ -21,6 +21,8 @@ short play(short i, short dir) {
 short canPlayerMove(int team) {
     if (team == game_turn) {
         int i, j, pieces=0, moves=0;
+        calculateAll(team);
+
         for (i=0;i<22;i++) {
             Piece* p = getPiece(i);
 
