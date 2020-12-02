@@ -9,7 +9,7 @@ short play(short i, short dir){
     if(game_turn==getTeam(p)){
         calculate(p);
 
-        if(p->moves[dir].score>0) {
+        if(isMoveLegal(&p->moves[dir])) {
             move(p, dir);
             game_turn = (game_turn == CPU_TEAM) ? USR_TEAM : CPU_TEAM;
             return 1;
@@ -28,14 +28,17 @@ short canPlayerMove(int team){
                 if(getTeam(p)==team){
                     pieces++;
                     for(j=0;j<4;j++){
-                        if(p->moves[j].score>0)
-                            moves++;
+                        if(isMoveLegal(&p->moves[j])) moves++;
                     }
                 }
             }
         }
-        return (short)((moves>0) && (pieces>0));
+        return (short)((moves>0) + (pieces>0));
     }
-    return 1;
+    return 2;
+}
+
+short getCurrentTurn(){
+    return game_turn;
 }
 

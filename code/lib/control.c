@@ -8,7 +8,17 @@ void resetMove(Move *m) {
     m->target.y  = -1;
     m->target.x  = -1;
     m->hit.piece = VOID_CELL;
-    m->score     = 0;
+}
+
+short isMoveLegal(Move *m) {
+    if (m != NULL) {
+        if (m->start.y < 0  || m->start.y > 6)  return 0;
+        if (m->start.x < 0  || m->start.x > 6)  return 0;
+        if (m->target.y < 0 || m->target.y > 6) return 0;
+        if (m->target.x < 0 || m->target.x > 6) return 0;
+        return 1;
+    }
+    return 0;
 }
 
 /* Returns if 2 pieces are in different teams
@@ -38,7 +48,6 @@ void assertMove(Move *m, int y, int x, int modY, int modX) {
         m->start.x  = (short) x;
         m->target.y = (short) ny;
         m->target.x = (short) nx;
-        m->score = 1;
         return;
     }
 
@@ -53,7 +62,6 @@ void assertMove(Move *m, int y, int x, int modY, int modX) {
         m->target.y = (short) nny;
         m->target.x = (short) nnx;
         m->hit.piece = cellAt(ny, nx)->piece;
-        m->score = 2;
         return;
     }
 
@@ -115,7 +123,7 @@ void move(Piece *p, int i) {
 
     if (i < 0 || i > 4)         return;
     if (p == NULL)              return;
-    if (p->moves[i].score <= 0) return;
+    if (!isMoveLegal(&p->moves[i])) return;
     if (isVoid(p->y, p->x))     return;
     tmp = cellAt(p->y, p->x);
 

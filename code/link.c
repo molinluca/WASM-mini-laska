@@ -8,27 +8,7 @@ int buffered_moves[8];
 
 export
 short do_move(short p, short i) {
-   Piece *pc;
-   Move m;
-   if (p > 21 || p < 0) return 0;
-   if (i < 0 || i > 3)  return 0;
-
-   pc = getPiece(p);
-   if (pc == NULL) return 0;
-   calculate(pc);
-
-   m = pc->moves[i];
-   if (m.score < 1) return 0;
-   move(pc, i);
-
-   return 1;
-}
-
-export
-void load_moves(int last) {
-   /* TO BE CHANGED */
-   calculateAll(CPU_TEAM);
-   calculateAll(USR_TEAM);
+   return playGame(p, i);
 }
 
 export
@@ -56,21 +36,24 @@ int *get_moves(int j) {
    int i;
    Piece *p;
    for (i=0; i<8; i++) {
-      buffered_moves[i] = -2;
+      buffered_moves[i] = -1;
    }
 
    if (j < 0 || j > 21) return buffered_moves;
 
    p = getPiece(j);
-   calculate(p);
+   if (getTeam(p) == getCurrentTurn()) {
+       calculate(p);
 
-   if (p == NULL) return buffered_moves;
-   for (i=0; i<4; i++) {
-      if (!!p->moves[i].score) {
-         buffered_moves[2*i]     = p->moves[i].target.y;
-         buffered_moves[2*i + 1] = p->moves[i].target.x;
-      }
+       if (p == NULL) return buffered_moves;
+       for (i = 0; i < 4; i++) {
+           if (isMoveLegal(&p->moves[i])) {
+               buffered_moves[2 * i]     = p->moves[i].target.y;
+               buffered_moves[2 * i + 1] = p->moves[i].target.x;
+           }
+       }
    }
+
    return buffered_moves;
 }
 
@@ -81,12 +64,22 @@ void new_game(int type) {
 
 export
 int get_game_state() {
-   return (int) game_state;
+   return (int) getGameState();
 }
 
 export
 void end_game() {
    quitGame();
+}
+
+export
+int get_turn() {
+    return getCurrentTurn();
+}
+
+export
+int get_status() {
+    return canPlayerMove(getCurrentTurn());
 }
 
 #endif
