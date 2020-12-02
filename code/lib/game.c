@@ -7,8 +7,7 @@ void initGame(short type) {
     if (game_state != STATE_GAME_NONE) return;
 
     switch (type) {
-        case STATE_GAME_PVE_HIGH:
-        case STATE_GAME_PVE_LOW:
+        case STATE_GAME_PVE:
         case STATE_GAME_PVP:
             game_state = type;
             break;
@@ -16,23 +15,35 @@ void initGame(short type) {
     }
 
     reset();
-    calculateAll(CPU_TEAM);
-    calculateAll(USR_TEAM);
 }
 
-void changeState(short type) {
-    /* The game must be running in order to change its state */
-    if (game_state == STATE_GAME_NONE) return;
+short updateState(short team, short canMove){
+    if(game_state==STATE_GAME_PVP || game_state==STATE_GAME_PVE){
+        if(team==USR_TEAM){
+            if(canMove==0) game_state=STATE_USR_NO_PIECES;
+            if(canMove==1) game_state=STATE_USR_NO_MOVES;
+        }
 
-    switch (type) {
-        case STATE_CPU_NO_MOVES:
-        case STATE_CPU_NO_PIECES:
-        case STATE_USR_NO_MOVES:
-        case STATE_USR_NO_PIECES:
-            game_state = type;
-            break;
-        default: return;
+        else if(team==CPU_TEAM){
+            if(canMove==0) game_state=STATE_CPU_NO_PIECES;
+            if(canMove==1) game_state=STATE_CPU_NO_MOVES;
+        }
     }
+    return game_state;
+}
+
+short playGame(short p, short dir){
+    if(game_state==STATE_GAME_PVP){
+        short moved, team;
+        moved=play(p, dir);
+        team=getCurrentTurn();
+        if(moved) return updateState(team, canPlayerMove(team));
+    }
+    return STATE_NOT_MOVED;
+}
+
+short getGameState(){
+    return game_state;
 }
 
 void quitGame() {

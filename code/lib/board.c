@@ -114,8 +114,8 @@ int isDisposed(Piece *p) {
 
 /* Lets the Piece A to conquer the Piece B stealing the head Piece of B */
 void conquer(Piece *a, Piece *b) {
-    if (a->tower[0] == EMPTY_PIECE || b->tower[0] == EMPTY_PIECE) return; /* If only one of the 2 Pieces is disposed, then exit */
-    if ((a->tower[0]>0) == (b->tower[0]>0)) return;                       /* Checks if the A and B Pieces are in the same team  */
+    if (isDisposed(a) || isDisposed(b)) return;
+    if (getTeam(a) == getTeam(b))       return;
 
     if (a->tower[1] == EMPTY_PIECE) {
         a->tower[1] = b->tower[0];
