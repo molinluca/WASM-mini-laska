@@ -3,11 +3,11 @@
 #include <stddef.h>
 
 /* Pieces possible values */
-#define CPU          (-1)
-#define USR           (1)
+#define CPU           (1)
+#define USR          (-1)
 #define EMPTY_PIECE   (0)
-#define PROMOTED_CPU (-2)
-#define PROMOTED_USR  (2)
+#define PROMOTED_CPU  (2)
+#define PROMOTED_USR (-2)
 
 /* Cell content */
 #define VOID_CELL (-1)
