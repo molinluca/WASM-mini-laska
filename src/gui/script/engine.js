@@ -27,6 +27,15 @@ class Engine {
       console.debug("Engine: New game instance created. Level: " + game_type);
    }
 
+
+   show_credits() {
+      document.querySelector("#info").classList.add("credits-on");
+   }
+
+   hide_credits() {
+      document.querySelector("#info").classList.remove("credits-on");
+   }
+
    /* Disposes the current game instance
       NOTE: if there is non game instance it will throw an Error */
    dispose_game_instance() {
@@ -95,5 +104,8 @@ document.body.onload = () => {
       document.querySelector("#type1").addEventListener("click", () => {Game.create_game_instance(STATE_GAME_PVP);});
       document.querySelector(".abort").addEventListener("click", () => {Game.dispose_game_instance();});
       document.querySelector(".btn").addEventListener("click",   () => {Game.dispose_game_instance();});
+
+      document.querySelector("#credits").addEventListener("click",      () => {Game.show_credits();});
+      document.querySelector(".close").addEventListener("click", () => {Game.hide_credits();});
    });
 }

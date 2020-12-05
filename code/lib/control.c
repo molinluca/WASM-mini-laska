@@ -129,3 +129,37 @@ void move(Piece *p, int i) {
         conquer(p, getPiece(p->moves[i].hit.piece));
     }
 }
+
+void undo(Step *step) {
+    if (step == NULL) return;
+    if (!isDisposed(&(step->moved)) && isMoveLegal(&(step->last))) {
+        Cell *c = cellAt(step->last.target.y, step->last.target.x);
+        Piece *p;
+
+        if (c != NULL) {
+            p = getPiece(c->piece);
+            if (p != NULL) {
+
+                p->y = step->moved.y;
+                p->x = step->moved.x;
+                p->tower[0] = step->moved.tower[0];
+                p->tower[1] = step->moved.tower[1];
+                p->tower[2] = step->moved.tower[2];
+                fillCell(step->last.start.y, step->last.start.x, *c);
+                voidCell(step->last.target.y, step->last.target.x);
+
+                if (!isDisposed(&(step->hit))) {
+                    Piece *h = getPiece(step->last.hit.piece);
+                    if (h != NULL) {
+                        h->y = step->hit.y;
+                        h->x = step->hit.x;
+                        h->tower[0] = step->hit.tower[0];
+                        h->tower[1] = step->hit.tower[1];
+                        h->tower[2] = step->hit.tower[2];
+                        fillCell(h->y, h->x, step->last.hit);
+                    }
+                }
+            }
+        }
+    }
+}

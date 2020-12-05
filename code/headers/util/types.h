@@ -3,11 +3,11 @@
 #include <stddef.h>
 
 /* Pieces possible values */
-#define CPU          (-1)
-#define USR           (1)
+#define CPU           (1)
+#define USR          (-1)
 #define EMPTY_PIECE   (0)
-#define PROMOTED_CPU (-2)
-#define PROMOTED_USR  (2)
+#define PROMOTED_CPU  (2)
+#define PROMOTED_USR (-2)
 
 /* Cell content */
 #define VOID_CELL (-1)
@@ -38,6 +38,6 @@ typedef struct Coor  { short y, x; }Coor;
 typedef struct Cell  { short piece; }Cell;
 typedef struct Move  { Coor start, target; Cell hit; }Move;
 typedef struct Piece { short y, x; short tower[3]; Move moves[4]; }Piece;
-typedef struct Score { Piece *piece; short direction; int score; }Score;
+typedef struct Step  { Piece moved, hit; Move last; }Step;
 
 #endif

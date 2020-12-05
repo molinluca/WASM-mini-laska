@@ -188,6 +188,7 @@ body {
 
          &.promoted * {
             filter: hue-rotate(-20deg);
+            transform: scale(1.1);
          }
 
          .piece {
@@ -288,19 +289,9 @@ body {
    }
 }
 
-.container #end-state {
+.container #end-state, #info {
    --accent-bg: rgba(119, 71, 197, .1);
    --accent-fg: rgb(119, 71, 197);
-
-   &[blue] {
-      --accent-bg: rgba(71, 111, 197, .1);
-      --accent-fg: rgb(71, 111, 197);
-   }
-
-   &[red] {
-      --accent-bg: rgba(197, 71, 71, .1);
-      --accent-fg: rgb(197, 71, 71);
-   }
 
    width: 100vw;
    height: 100vh;
@@ -370,6 +361,48 @@ body {
    }
 }
 
+#info {
+   backdrop-filter: blur(10px);
+   z-index: @alert-level;
+   .close {
+      float: right;
+      border-radius: 13px;
+      font-weight: 500;
+      padding: 15px;
+      background-color: var(--accent-bg);
+      color: var(--accent-fg);
+      border-color: var(--accent-bg);
+      font-weight: bold;
+      transition: .5s;
+      cursor: pointer;
+      margin-top: 1em;
+
+      &:hover {
+         transform: scale(1.05);
+      }
+
+      &:active {
+         transform: scale(0.95);
+         opacity: 0.75;
+         transition: 0.15s;
+      }
+   }
+}
+
+.container #end-state {
+   &[blue] {
+      --accent-bg: rgba(71, 111, 197, .1);
+      --accent-fg: rgb(71, 111, 197);
+   }
+
+   &[red] {
+      --accent-bg: rgba(197, 71, 71, .1);
+      --accent-fg: rgb(197, 71, 71);
+   }
+}
+
+
+
 @keyframes bgmove {
    from { background-position: 0 0; }
    to   { background-position: 1600px 900px; }
@@ -378,6 +411,15 @@ body {
 @keyframes board {
    from { opacity: 0; filter: blur(5px); transform: scale(1.1); }
    to   { opacity: 1; filter: blur(0px); transform: scale(1); }
+}
+
+
+
+.credits-on {
+   opacity: 1 !important;
+   visibility: visible !important;
+   transform: scale(1) !important;
+   filter: blur(0px) !important;
 }
 
 .hidden {

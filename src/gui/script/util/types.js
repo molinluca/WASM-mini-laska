@@ -1,9 +1,9 @@
 let Game = undefined;
 
-const CPU          = -1;
-const USR          =  1;
-const PROMOTED_CPU = -2;
-const PROMOTED_USR =  2;
+const CPU          =  1;
+const USR          = -1;
+const PROMOTED_CPU =  2;
+const PROMOTED_USR = -2;
 
 const VOID_CELL = -1;
 
