@@ -1,5 +1,25 @@
 #include "../headers/brain.h"
+#include <stdlib.h>
+#include "../headers/util/list.h"
 static short game_turn = USR_TEAM;
+static List *timeline;
+
+int minimax() {
+    return 1;
+}
+
+void fillStep(Step *s, Piece *p, short dir) {
+    if (s != NULL && p != NULL) {
+        Piece *hit;
+        Cell hc = p->moves[dir].hit;
+        s->moved = *p;
+        s->last = p->moves[dir];
+
+        hit = getPiece(hc.piece);
+        if (hit != NULL) { s->hit = *hit; }
+        else             { disposePiece(&(s->hit)); }
+    }
+}
 
 short play(short i, short dir) {
     Piece* p=getPiece(i);
@@ -44,3 +64,26 @@ short getCurrentTurn() {
     return game_turn;
 }
 
+short bestCPU() {
+    if (game_turn == CPU_TEAM) {
+        short i, j;
+        Piece *p;
+        Step step;
+
+        for (i=0; i<22; i++) {
+            p = getPiece(i);
+            if (p != NULL) {
+                for (j=0; j<4; j++) {
+                    if (isMoveLegal( &(p->moves[j]) )) {
+                        fillStep(&step, p, j);
+                        move(p, j);
+                        /* minimax */
+                        undo(&step);
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
