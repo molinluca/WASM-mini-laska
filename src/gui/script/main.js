@@ -7,6 +7,7 @@ class LaskaGame {
       this.ANSI    = instance;
       this.mem     = memory;
       this.focus   = undefined;
+      this.state   = type;
 
       document.querySelector("#end-state").removeAttribute("blue");
       document.querySelector("#end-state").removeAttribute("red");
@@ -17,9 +18,10 @@ class LaskaGame {
 
    /* Gets the updated state of the game
    *  NOTE: if the state describes a game ending, it will be shown */
-   update_state() {
-      this.state = this.ANSI.get_game_state();
-      switch(this.state) {
+   update_state(state) {
+
+      this.state = state;
+      switch(state) {
          case STATE_USR_NO_MOVES:
             this.end_match({loser: USR_TEAM, has_pieces_left: true});
             break;
@@ -35,6 +37,7 @@ class LaskaGame {
 
          default: return;
       }
+
    }
 
    /* Fills the game table with the Pieces in the right positions */
@@ -56,15 +59,15 @@ class LaskaGame {
             for (let j=0; j<3; j++) {
                if (tower[j] === CPU || tower[j] === PROMOTED_CPU) {
                   cell.innerHTML += '<div class="piece CPU"></div>';
-               } else if (tower[j] === USR || tower[j] === PROMOTED_USR) {
+               }
+
+               else if (tower[j] === USR || tower[j] === PROMOTED_USR) {
                   cell.innerHTML += '<div class="piece USR"></div>';
                }
 
                /* If the first piece of the tower is promoted... */
-               if ((tower[j] % 2 === 0) && j === 0)
-                  cell.classList.add("promoted");
-               else if (j === 0)
-                  cell.classList.remove("promoted");
+               if ((tower[j] % 2 === 0) && j === 0) cell.classList.add("promoted");
+               else if (j === 0) cell.classList.remove("promoted");
             }
          }
       }
@@ -85,11 +88,11 @@ class LaskaGame {
    /* Calls the "ANSI C" move function in order to move a piece in the selected direction */
    play(piece, direction) {
       if (isNaN(piece) || isNaN(direction)) throw new Error("Trying to use NON NUMERIC values to move a Piece");
-      let moved = this.ANSI.do_move(piece, direction);
-      if (moved) {
+      let played = this.ANSI.do_move(piece, direction);
+      if (played) {
          this.fill();
          this.unfocus();
-         this.update_state();
+         this.update_state(played);
       }
    }
 
@@ -100,9 +103,13 @@ class LaskaGame {
          if (this.focus === undefined) {
             this.focus = piece;
             this.load_moves(piece);
-         } else if (move !== null) {
+         }
+
+         else if (move !== null) {
             this.play(this.focus, move);
-         } else if (this.focus === piece) {
+         }
+
+         else if (this.focus === piece) {
             this.unfocus();
          }
       }
@@ -130,11 +137,12 @@ class LaskaGame {
          }
       }
 
-      console.debug("LaskaGame: evaluating moves for piece "+piece+"... Found "+found);
       if (found > 0) {
          document.querySelector(`.board_cell[piece="${piece}"]`).setAttribute("main", this.piece);
          document.querySelector("table").classList.add("choice");
-      } else {
+      }
+
+      else {
          this.unfocus();
       }
    }
@@ -158,24 +166,42 @@ class LaskaGame {
    /* End game state handler */
    end_match({loser, has_pieces_left}) {
       this.destroy();
+
       let text = "The match concluded in a <span>tie</span>... No player has <span>legal moves</span> left";
       document.querySelector(".container").classList.add("game-over");
+
       if (loser === CPU_TEAM) {
-        if (has_pieces_left)
-          text = "The <span>BLUE PLAYER</span> won the match... The other player's pieces <span>can't move</span>"
-        else
-          text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no pieces left</span>"
-        document.querySelector("#end-state .message .text").innerHTML = text;
-        document.querySelector("#end-state").setAttribute("blue", true);
-      } else if (loser === USR_TEAM) {
-
-        if (has_pieces_left)
-          text = "The <span>RED PLAYER</span> won the match... The other player's pieces <span>can't move</span>"
-        else
-          text = "The <span>RED PLAYER</span> won the match... The other player has <span>no pieces left</span>"
-
-        document.querySelector("#end-state .message .text").innerHTML = text;
-        document.querySelector("#end-state").setAttribute("red", true);
+         if (has_pieces_left) text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no legal moves</span> possible"
+         else                 text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no pieces left</span>"
+         document.querySelector("#end-state").setAttribute("blue", true);
       }
+
+      else if (loser === USR_TEAM) {
+         if (has_pieces_left) text = "The <span>RED PLAYER</span> won the match... The other player has <span>no legal moves</span> possible"
+         else                 text = "The <span>RED PLAYER</span> won the match... The other player has <span>no pieces left</span>"
+         document.querySelector("#end-state").setAttribute("red", true);
+      }
+
+      document.querySelector("#end-state .message .text").innerHTML = text;
    }
+}
+
+
+
+
+
+
+
+function test() {
+   let tm, iteration = 0;
+   tm = setInterval(() => {
+      let piece = Math.floor(Math.random() * 22);
+      let move  = Math.floor(Math.random() * 4);
+      Game.GameInstance.play(piece, move);
+      iteration++;
+      if (iteration > 100000 || Game.GameInstance.state !== 10) {
+         clearInterval(tm);
+         console.warn("Finito", Game.GameInstance.state);
+      }
+   }, 0);
 }

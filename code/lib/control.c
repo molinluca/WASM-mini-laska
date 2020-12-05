@@ -1,6 +1,5 @@
 #include "../headers/control.h"
 
-/* Resets a given Move, setting it to a blank state */
 void resetMove(Move *m) {
     if (m == NULL) return;
     m->start.y   = -1;
@@ -8,11 +7,19 @@ void resetMove(Move *m) {
     m->target.y  = -1;
     m->target.x  = -1;
     m->hit.piece = VOID_CELL;
-    m->score     = 0;
 }
 
-/* Returns if 2 pieces are in different teams
- * NOTE: the returned value is a boolean-like, either 0 or 1 */
+short isMoveLegal(Move *m) {
+    if (m != NULL) {
+        if (m->start.y < 0  || m->start.y > 6)  return 0;
+        if (m->start.x < 0  || m->start.x > 6)  return 0;
+        if (m->target.y < 0 || m->target.y > 6) return 0;
+        if (m->target.x < 0 || m->target.x > 6) return 0;
+        return 1;
+    }
+    return 0;
+}
+
 int areEnemies(int a, int b) {
     Piece *pa, *pb;
     if (a < 0 || a > 21 || b < 0 || b > 21) return 0;
@@ -22,8 +29,6 @@ int areEnemies(int a, int b) {
     return getTeam(pa) != getTeam(pb);
 }
 
-/* Fills the pointer Move given as parameter only if it leads to a legal Move
- * NOTE: it the move to assert is not legal, it will return leaving it blank */
 void assertMove(Move *m, int y, int x, int modY, int modX) {
     int ny, nx, nny, nnx;
     if (m == NULL) return;
@@ -38,7 +43,6 @@ void assertMove(Move *m, int y, int x, int modY, int modX) {
         m->start.x  = (short) x;
         m->target.y = (short) ny;
         m->target.x = (short) nx;
-        m->score = 1;
         return;
     }
 
@@ -53,14 +57,11 @@ void assertMove(Move *m, int y, int x, int modY, int modX) {
         m->target.y = (short) nny;
         m->target.x = (short) nnx;
         m->hit.piece = cellAt(ny, nx)->piece;
-        m->score = 2;
         return;
     }
 
 }
 
-/* Calculates all the Moves of a single Piece
- * NOTE: the Piece has not to be NULL or disposed to calculate its moves, otherwise the function won't do anything */
 void calculate(Piece *p) {
     int mods[4][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     if (p == NULL) return;
@@ -95,8 +96,6 @@ void calculate(Piece *p) {
     }
 }
 
-/* Calculates all the possible Moves of a team
- * NOTE: The team indicator must be either the CPU_TEAM or the USR_TEAM */
 void calculateAll(int team) {
     int i;
     Piece *p;
@@ -108,14 +107,12 @@ void calculateAll(int team) {
     }
 }
 
-/* Tries to perform a move, given the Piece to move and the move index
- * NOTE: if the Piece is disposed or NULL, or if the move is blank, it won't do anything */
 void move(Piece *p, int i) {
     Cell *tmp;
 
     if (i < 0 || i > 4)         return;
     if (p == NULL)              return;
-    if (p->moves[i].score <= 0) return;
+    if (!isMoveLegal(&p->moves[i])) return;
     if (isVoid(p->y, p->x))     return;
     tmp = cellAt(p->y, p->x);
 
@@ -124,10 +121,8 @@ void move(Piece *p, int i) {
     p->y = p->moves[i].target.y;
     p->x = p->moves[i].target.x;
 
-    if (p->tower[0] > 0 && p->y == 6)
-        promote(p);
-    if (p->tower[0] < 0 && p->y == 0)
-        promote(p);
+    if (getTeam(p) == CPU_TEAM && p->y == 6) promote(p);
+    if (getTeam(p) == USR_TEAM && p->y == 0) promote(p);
 
     if (p->moves[i].hit.piece == VOID_CELL) return;
     if (!isDisposed(getPiece(p->moves[i].hit.piece))) {
