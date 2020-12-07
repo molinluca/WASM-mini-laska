@@ -79,7 +79,7 @@ int get_turn() {
 
 export
 int get_status() {
-    return canPlayerMove(getCurrentTurn());
+    return canTeamMove(getCurrentTurn(), ((void *)0));
 }
 
 #endif

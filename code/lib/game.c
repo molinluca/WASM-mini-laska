@@ -37,7 +37,7 @@ short playGame(short p, short dir){
         short moved, team;
         moved=play(p, dir);
         team=getCurrentTurn();
-        if(moved) return updateState(team, canPlayerMove(team));
+        if(moved) return updateState(team, canTeamMove(team, NULL));
     }
     return STATE_NOT_MOVED;
 }

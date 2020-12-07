@@ -36,8 +36,10 @@ void destroyList(List *v) {
       }
       head = temp;
    }
+
    v->head = NULL;
    v->len = 0;
+   free(v);
 }
 
 int pushList(List *l, void *data) {
@@ -60,6 +62,7 @@ int pushList(List *l, void *data) {
          return 1;
       }
    }
+
    return 0;
 }
 
@@ -81,7 +84,6 @@ void *getElementAt(List *l, int index) {
 }
 
 void *popList(List *l, unsigned index) {
-
    if (l != NULL) {
       Node *node = l->head;
       Node *prev = NULL;

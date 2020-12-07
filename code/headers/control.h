@@ -16,6 +16,24 @@ void calculate(Piece *p);
 void calculateAll(int team);
 
 /**
+ * Clona il contenuto della mossa A alla mossa B
+ * @param clone Il puntarore alla mossa clone
+ * @param original Il puntatore alla mossa originale
+ * @return 1 se la clonazione ha avuto effetto
+ * @return 0 se i puntatori non sono validi
+ */
+short cloneMove(Move *clone, Move *original);
+
+/**
+ * Clona il contenuto della pedina A alla pedina B
+ * @param clone Il puntarore alla pedina clone
+ * @param original Il puntatore alla pedina originale
+ * @return 1 se la clonazione ha avuto effetto
+ * @return 0 se i puntatori non sono validi
+ */
+short clonePiece(Piece *clone, Piece *original);
+
+/**
  * Effettua il movimento di una pedina specifica in una delle 4 direzioni
  * @param p Il puntatore alla pedina
  * @param i La direzione [FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT]
