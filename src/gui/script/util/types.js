@@ -17,8 +17,9 @@ const STATE_CPU_NO_MOVES  = 2;
 const STATE_USR_NO_PIECES = 3;
 const STATE_CPU_NO_PIECES = 4;
 const STATE_GAME_PVP      = 10;
-const STATE_GAME_PVE_LOW  = 11;
-const STATE_GAME_PVE_HIGH = 12;
+const STATE_GAME_PVE_EASY = 11;
+const STATE_GAME_PVE_MED  = 12;
+const STATE_GAME_PVE_HARD = 13;
 const STATE_GAME_NONE     = 99;
 
 
@@ -30,4 +31,8 @@ function handle_click(e) {
 function quit() {
    const { remote } = require('electron');
    remote.getCurrentWindow().close();
+}
+
+function sleep(ms) {
+   return new Promise((resolve) => setTimeout(resolve, ms));
 }

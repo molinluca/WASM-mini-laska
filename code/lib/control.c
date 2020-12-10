@@ -86,6 +86,7 @@ short clonePiece(Piece *clone, Piece *original) {
     resetMove(&(clone->moves[0]));
     resetMove(&(clone->moves[1]));
     resetMove(&(clone->moves[2]));
+    resetMove(&(clone->moves[3]));
 
     return 1;
 }

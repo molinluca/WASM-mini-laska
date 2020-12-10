@@ -289,7 +289,7 @@ body {
    }
 }
 
-.container #end-state, #info {
+.container #end-state, #info, #diff {
    --accent-bg: rgba(119, 71, 197, .1);
    --accent-fg: rgb(119, 71, 197);
 
@@ -401,6 +401,81 @@ body {
    }
 }
 
+#diff {
+   --accent-bg: rgba(119, 71, 197, .1);
+   --accent-fg: rgb(119, 71, 197);
+   backdrop-filter: blur(10px);
+
+
+   .diffs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1em;
+
+      * {
+         --accent-bg: rgba(119, 71, 197, .03);
+         margin: 0 .5em;
+         border-radius: .5em;
+         padding: .5em 2.5em;
+         font-size: 1.3em;
+         background-color: var(--accent-bg);
+         color: var(--accent-fg);  
+         transition: .5s;
+         user-select: none;
+         border: 4px solid var(--accent-bg);
+         box-shadow: 10px 10px 70px -30px rgba(0, 0, 0, 0.25);
+
+         cursor: pointer;
+         &:hover {
+            transform: scale(1.05);
+         }
+
+         &:active {
+            transform: scale(0.95);
+            opacity: 0.75;
+            transition: 0.15s;
+         }
+         
+         &#type2 {  // EASY
+            --accent-fg: rgb(0, 150, 0);
+         }
+
+         &#type3 {  // MEDIUM
+            --accent-fg: rgb(219, 117, 0);
+         }
+
+         &#type4 { // HARD
+            --accent-fg: rgb(255, 4, 4);
+         }
+      }
+   }
+
+   .dismiss {
+      float: right;
+      border-radius: 13px;
+      font-weight: 500;
+      padding: 15px;
+      background-color: var(--accent-bg);
+      color: var(--accent-fg);
+      border-color: var(--accent-bg);
+      font-weight: bold;
+      transition: .5s;
+      cursor: pointer;
+      margin-top: 1em;
+
+      &:hover {
+         transform: scale(1.05);
+      }
+
+      &:active {
+         transform: scale(0.95);
+         opacity: 0.75;
+         transition: 0.15s;
+      }
+   }
+}
+
 
 
 @keyframes bgmove {
@@ -415,12 +490,13 @@ body {
 
 
 
-.credits-on {
+.credits-on, .choice-on {
    opacity: 1 !important;
    visibility: visible !important;
    transform: scale(1) !important;
    filter: blur(0px) !important;
 }
+
 
 .hidden {
    opacity: 0;

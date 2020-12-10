@@ -19,6 +19,8 @@ void initGame(short type);
  */
 short playGame(short p, short dir);
 
+short awaitCPU();
+
 /**
  * Restituisce lo stato del gioco al momento della chiamata
  * @return Lo stato corrente del gioco
