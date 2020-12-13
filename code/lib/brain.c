@@ -111,7 +111,7 @@ short executeStep(Step *s) {
 
         moved = getPiece(c->piece);
         if (getTeam(moved) == DISPOSED) return 0;
-        calculate(moved);
+        calculateMoves(getTeam(moved));
 
         direction = translateDirection(&(s->last), getTeam(moved));
         if (direction < 0 || direction > 3) return 0;
@@ -132,7 +132,7 @@ short canTeamMove(int team, List *l) {
         l->len  = 0;
     }
 
-    calculateAll(team);
+    calculateMoves(team);
 
     for (i=0; i<22; i++) {
         Piece *p = getPiece(i);
