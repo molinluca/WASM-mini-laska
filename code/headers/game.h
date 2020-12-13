@@ -1,6 +1,6 @@
 #ifndef WASM_MINI_LASKA_GAME_H
 #define WASM_MINI_LASKA_GAME_H
-#include "brain.h"
+#include "engine.h"
 /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 /**
@@ -18,6 +18,8 @@ void initGame(short type);
  * @return Se la mossa ha avuto luogo, ricalcola lo stato del gioco e lo restituisce (sia che esso indichi che la partita e` in corso, sia che indichi che e` terminata)
  */
 short playGame(short p, short dir);
+
+short awaitCPU();
 
 /**
  * Restituisce lo stato del gioco al momento della chiamata

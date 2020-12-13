@@ -62,6 +62,35 @@ void assertMove(Move *m, int y, int x, int modY, int modX) {
 
 }
 
+
+short cloneMove(Move *clone, Move *original) {
+    if (clone == NULL || original == NULL) return 0;
+
+    clone->start.y   = original->start.y;
+    clone->start.x   = original->start.x;
+    clone->target.y  = original->target.y;
+    clone->target.x  = original->target.x;
+    clone->hit.piece = original->hit.piece;
+
+    return 1;
+}
+
+short clonePiece(Piece *clone, Piece *original) {
+    if (clone == NULL || original == NULL) return 0;
+
+    clone->y        = original->y;
+    clone->x        = original->x;
+    clone->tower[0] = original->tower[0];
+    clone->tower[1] = original->tower[1];
+    clone->tower[2] = original->tower[2];
+    resetMove(&(clone->moves[0]));
+    resetMove(&(clone->moves[1]));
+    resetMove(&(clone->moves[2]));
+    resetMove(&(clone->moves[3]));
+
+    return 1;
+}
+
 void calculate(Piece *p) {
     int mods[4][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
     if (p == NULL) return;
@@ -140,23 +169,17 @@ void undo(Step *step) {
             p = getPiece(c->piece);
             if (p != NULL) {
 
-                p->y = step->moved.y;
-                p->x = step->moved.x;
-                p->tower[0] = step->moved.tower[0];
-                p->tower[1] = step->moved.tower[1];
-                p->tower[2] = step->moved.tower[2];
+                clonePiece(p, &(step->moved));
                 fillCell(step->last.start.y, step->last.start.x, *c);
                 voidCell(step->last.target.y, step->last.target.x);
 
                 if (!isDisposed(&(step->hit))) {
                     Piece *h = getPiece(step->last.hit.piece);
                     if (h != NULL) {
-                        h->y = step->hit.y;
-                        h->x = step->hit.x;
-                        h->tower[0] = step->hit.tower[0];
-                        h->tower[1] = step->hit.tower[1];
-                        h->tower[2] = step->hit.tower[2];
+
+                        clonePiece(h, &(step->hit));
                         fillCell(h->y, h->x, step->last.hit);
+
                     }
                 }
             }

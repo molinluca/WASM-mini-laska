@@ -87,8 +87,9 @@ void disposePiece(Piece *p);
 /**
  * Controlla se la pedina non e` piu` "in gioco", dato il suo puntatore
  * @param p Il puntatore alla pedina
- * @returns 1 Se la pedina non contiene nulla, ovvero la testa della torre e` vuota
- * @returns 0 Se la pedina e` ancora in gioco
+ * @returns  1 Se la pedina non contiene nulla, ovvero la testa della torre e` vuota
+ * @returns  0 Se la pedina e` ancora in gioco
+ * @returns -1 Se il puntatore e` NULL
  */
 int isDisposed(Piece *p);
 

@@ -15,8 +15,9 @@ class Engine {
 
       switch(game_type) {
          case STATE_GAME_PVP:
-         case STATE_GAME_PVE_LOW:
-         case STATE_GAME_PVE_HIGH:
+         case STATE_GAME_PVE_EASY:
+         case STATE_GAME_PVE_MED:
+         case STATE_GAME_PVE_HARD:
             this.GameInstance = new LaskaGame(this.ENGINE.exports, this.ENGINE.memory, game_type);
             this.show_game();
             break;
@@ -34,6 +35,14 @@ class Engine {
 
    hide_credits() {
       document.querySelector("#info").classList.remove("credits-on");
+   }
+
+   show_choice() {
+      document.querySelector("#diff").classList.add("choice-on");
+   }
+
+   hide_choice() {
+      document.querySelector("#diff").classList.remove("choice-on");
    }
 
    /* Disposes the current game instance
@@ -73,6 +82,8 @@ class Engine {
       if (!this.GameInstance) throw new Error("No game instanceto show");
       document.querySelector(".container").classList.remove("inactive");
       document.querySelector("#menu").classList.add("inactive");
+      this.hide_credits();
+      this.hide_choice();
    }
 }
 
@@ -101,11 +112,17 @@ document.body.onload = () => {
 
       /* Activates all the "usable" controls on the main menu and on the game interface */
       document.querySelector("#type1").classList.remove("inactive");
+      document.querySelector("#typeE").classList.remove("inactive");
       document.querySelector("#type1").addEventListener("click", () => {Game.create_game_instance(STATE_GAME_PVP);});
+      document.querySelector("#type2").addEventListener("click", () => {Game.create_game_instance(STATE_GAME_PVE_EASY);});
+      document.querySelector("#type3").addEventListener("click", () => {Game.create_game_instance(STATE_GAME_PVE_MED);});
+      document.querySelector("#type4").addEventListener("click", () => {Game.create_game_instance(STATE_GAME_PVE_HARD);});
       document.querySelector(".abort").addEventListener("click", () => {Game.dispose_game_instance();});
       document.querySelector(".btn").addEventListener("click",   () => {Game.dispose_game_instance();});
 
-      document.querySelector("#credits").addEventListener("click",      () => {Game.show_credits();});
-      document.querySelector(".close").addEventListener("click", () => {Game.hide_credits();});
+      document.querySelector("#typeE").addEventListener("click", ()   => {Game.show_choice();});
+      document.querySelector(".dismiss").addEventListener("click", () => {Game.hide_choice();});
+      document.querySelector("#credits").addEventListener("click", () => {Game.show_credits();});
+      document.querySelector(".close").addEventListener("click", ()   => {Game.hide_credits();});
    });
 }

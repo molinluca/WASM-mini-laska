@@ -2,42 +2,47 @@
 #define WASM_MINI_LASKA_H
 #include <stddef.h>
 
-/* Pieces possible values */
-#define CPU           (1)
-#define USR          (-1)
-#define EMPTY_PIECE   (0)
-#define PROMOTED_CPU  (2)
-#define PROMOTED_USR (-2)
+#define CPU           (1)          /* Il valore per una pedina di CPU */
+#define USR          (-1)          /* Il valore per una pedina di USR */
+#define EMPTY_PIECE   (0)          /* Il valore per una pedina VUOTA */
+#define PROMOTED_CPU  (2)          /* Il valore per una pedina PROMOSSA di CPU */
+#define PROMOTED_USR (-2)          /* Il valore per una pedina PROMOSSA di USR */
 
-/* Cell content */
-#define VOID_CELL (-1)
+#define VOID_CELL (-1)             /* Placeholder per una cella che non contiene nessuna pedina */
 
-/* Teams */
-#define CPU_TEAM (0)
-#define USR_TEAM (1)
-#define DISPOSED (99)
+#define CPU_TEAM (0)               /* Valore per il TEAM di CPU */
+#define USR_TEAM (1)               /* Valore per il TEAM di USR */
+#define DISPOSED (99)              /* Placeholder per indicare nessun TEAM */
 
-/* Movement */
-#define FRONT_LEFT  (0)
-#define FRONT_RIGHT (1)
-#define BACK_LEFT   (2)
-#define BACK_RIGHT  (3)
+#define FRONT_LEFT  (0)            /* Movimento AVANTI a SINISTRA */
+#define FRONT_RIGHT (1)            /* Movimento AVANTI a DESTRA */
+#define BACK_LEFT   (2)            /* Movimento INDIETRO a SINISTRA */
+#define BACK_RIGHT  (3)            /* Movimento INDIETRO a DESTRA */
 
-/* Game states */
-#define STATE_NOT_MOVED     (0)
-#define STATE_USR_NO_MOVES  (1)
-#define STATE_CPU_NO_MOVES  (2)
-#define STATE_USR_NO_PIECES (3)
-#define STATE_CPU_NO_PIECES (4)
-#define STATE_GAME_PVP      (10)
-#define STATE_GAME_PVE      (11)
-#define STATE_GAME_NONE     (99)
+#define UNKNOWN_STATE (0)          /* Placeholder per indicare un valore non calcolato dall'algoritmo ricorsivo */
+#define INFINITY      (2147483647) /* Il MASSIMO valore per un signed int */
 
-/* Structs types */
-typedef struct Coor  { short y, x; }Coor;
-typedef struct Cell  { short piece; }Cell;
-typedef struct Move  { Coor start, target; Cell hit; }Move;
-typedef struct Piece { short y, x; short tower[3]; Move moves[4]; }Piece;
-typedef struct Step  { Piece moved, hit; Move last; }Step;
+#define STATE_NOT_MOVED     (0)    /* Placeholder per indicare un ritorno in cui nessuna pedina e` stata mossa */
+#define STATE_USR_NO_MOVES  (1)    /* Stato di FINE gioco, indica che USR non puo` muovere */
+#define STATE_CPU_NO_MOVES  (2)    /* Stato di FINE gioco, indica che CPU non puo` muovere */
+#define STATE_USR_NO_PIECES (3)    /* Stato di FINE gioco, indica che USR non ha pedine */
+#define STATE_CPU_NO_PIECES (4)    /* Stato di FINE gioco, indica che CPU non ha pedine */
+#define STATE_GAME_PVP      (10)   /* Versione BASE del gioco, Player contro Player */
+#define STATE_GAME_PVE_EASY (11)   /* Versione Player contro Computer (senza ricorsione) */
+#define STATE_GAME_PVE_MED  (12)   /* Versione Player contro Computer con media difficolta` */
+#define STATE_GAME_PVE_HARD (13)   /* Versione Player contro Computer molto difficile */
+#define STATE_GAME_NONE     (99)   /* Placeholder per indicare NESSUN GIOCO ATTIVO */
+
+#define DIFF_EASY   (0)            /* Per non usare la ricorsione */
+#define DIFF_MEDIUM (2)            /* Difficolta` base, 2 mosse nel futuro */
+#define DIFF_HARD   (5)            /* Molto difficile, 5 mosse nel futuro */
+
+
+
+typedef struct Coor  { short y, x; }Coor;                                 /* Struttura per indicare un set di coordinate (x, y) */
+typedef struct Cell  { short piece; }Cell;                                /* Struttura per indicare una CELLA della scacchiera */
+typedef struct Move  { Coor start, target; Cell hit; }Move;               /* Struttura per indicare una possibile MOSSA di una PEDINA */
+typedef struct Piece { short y, x; short tower[3]; Move moves[4]; }Piece; /* Struttura per indicare una PEDINA del gioco */
+typedef struct Step  { Piece moved, hit; Move last; }Step;                /* Struttura per indicare uno STEP (per l'algoritmo ricorsivo) */
 
 #endif

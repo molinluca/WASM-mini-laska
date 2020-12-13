@@ -85,6 +85,20 @@ class LaskaGame {
       }
    }
 
+   async await_CPU() {
+      document.querySelector("table").classList.add("choice");
+      await sleep(250); /* Minimum time delay */
+
+      let played = this.ANSI.play_CPU();
+      if (played) {
+         this.fill();
+         this.unfocus();
+         this.update_state(played);
+      }
+
+      this.unfocus();
+   }
+
    /* Calls the "ANSI C" move function in order to move a piece in the selected direction */
    play(piece, direction) {
       if (isNaN(piece) || isNaN(direction)) throw new Error("Trying to use NON NUMERIC values to move a Piece");
@@ -94,6 +108,10 @@ class LaskaGame {
          this.unfocus();
          this.update_state(played);
       }
+
+      if      (this.state === STATE_GAME_PVE_EASY) this.await_CPU();
+      else if (this.state === STATE_GAME_PVE_MED)  this.await_CPU();
+      else if (this.state === STATE_GAME_PVE_HARD) this.await_CPU();
    }
 
    /* Either selects a piece to move or tries to move it */
