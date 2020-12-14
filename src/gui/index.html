@@ -8,9 +8,7 @@
    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
    <link rel="stylesheet" href="style/computed/main.min.css">
 
-   <script defer src="script/util/types.js"></script>
-   <script defer src="script/main.js"></script>
-   <script defer src="script/engine.js"></script>
+   <script defer type="module" src="script/index.mjs"></script>
 </head>
 <body>
 
@@ -23,10 +21,10 @@
          <br />
          <div id="credits" class="menu-item"><strong>Credits</strong></div>
          <hr />
-         <div id="exit" class="menu-item" onclick="quit()">Exit</div>
+         <div id="exit" class="menu-item">Exit</div>
       </div>
 
-      <div id="diff" class="choice-on">
+      <div id="diff">
          <div class="message">
             <div class="title">Choose the difficulty</div>
             <div class="diffs">
