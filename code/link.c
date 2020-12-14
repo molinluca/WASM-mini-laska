@@ -1,5 +1,3 @@
-#ifndef _LIB_LASKA_
-#define _LIB_LASKA_
 #include <webassembly.h>
 #include "headers/game.h"
 
@@ -38,7 +36,7 @@ int *get_piece(int i) {
 
 export
 int *get_moves(int j) {
-    int i;
+    int i, team;
     Piece *p;
     for (i=0; i<8; i++) {
         buffered_moves[i] = -1;
@@ -48,8 +46,10 @@ int *get_moves(int j) {
     if (getCurrentTurn() == CPU_TEAM && getGameState() != STATE_GAME_PVP) return buffered_moves;
 
     p = getPiece(j);
-    if (getTeam(p) == getCurrentTurn()) {
-        calculate(p);
+    team = getTeam(p);
+
+    if (team == getCurrentTurn()) {
+        calculateMoves(team);
 
         if (p == NULL) return buffered_moves;
         for (i = 0; i < 4; i++) {
@@ -87,5 +87,3 @@ export
 int get_status() {
     return canTeamMove(getCurrentTurn(), ((void *)0));
 }
-
-#endif

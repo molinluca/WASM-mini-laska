@@ -20,11 +20,6 @@ void prt() {
 
 void run_test() {
     /* Run all needed tests of the new features */
-    initGame(STATE_GAME_PVE_HARD);
-    play(14, FRONT_LEFT);
-    prt();
-    playBestCPU(0);
-    prt();
 }
 
 int main() {

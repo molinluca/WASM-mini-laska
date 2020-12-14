@@ -8,7 +8,7 @@ short play(short i, short dir) {
     if (p==NULL) return 0;
     if (dir<0 || dir>3) return 0;
     if (game_turn==getTeam(p)) {
-        calculate(p);
+        calculateMoves(getTeam(p));
 
         if (isMoveLegal( &(p->moves[dir]) )) {
             move(p, dir);
@@ -50,6 +50,7 @@ short playBestCPU(short depth) {
 
             choice = getElementAt(l, best);
             if (choice == NULL) return 0;
+
 
             i = executeStep(choice);
             destroyList(l);

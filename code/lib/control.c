@@ -1,5 +1,7 @@
 #include "../headers/control.h"
 
+static int force_eat = -1;
+
 void resetMove(Move *m) {
     if (m == NULL) return;
     m->start.y   = -1;
@@ -91,48 +93,45 @@ short clonePiece(Piece *clone, Piece *original) {
     return 1;
 }
 
-void calculate(Piece *p) {
-    int mods[4][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
-    if (p == NULL) return;
-    if (isDisposed(p)) return;
+void calc(Piece *p, int dir) {
+    int delta[4][2] = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
+    int d;
+    int team = getTeam(p);
 
-    if (p->tower[0] == USR || p->tower[0] == PROMOTED_USR) {
-        /* If is a Player Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[3][0], mods[3][1]); /*FRONT_LEFT*/
-        assertMove(&p->moves[1], p->y, p->x, mods[2][0], mods[2][1]); /*FRONT_RIGHT*/
+    if (team == DISPOSED) return;
+    if (dir < 0 || dir > 3) return;
 
-        /* If is promoted */
-        if (p->tower[0] == PROMOTED_USR) {
-            assertMove(&p->moves[2], p->y, p->x, mods[1][0], mods[1][1]); /*BACK_LEFT*/
-            assertMove(&p->moves[3], p->y, p->x, mods[0][0], mods[0][1]); /*BACK_RIGHT*/
-        } else {
-            resetMove(&p->moves[2]);
-            resetMove(&p->moves[3]);
-        }
-    } else if (p->tower[0] == CPU || p->tower[0] == PROMOTED_CPU) {
-        /* If is a Computer Piece */
-        assertMove(&p->moves[0], p->y, p->x, mods[1][0], mods[1][1]); /*FRONT_LEFT*/
-        assertMove(&p->moves[1], p->y, p->x, mods[0][0], mods[0][1]); /*FRONT_RIGHT*/
+    if (team == CPU_TEAM) d = dir;
+    else                  d = (dir + 2) % 4;
 
-        /* If is promoted */
-        if (p->tower[0] == PROMOTED_CPU) {
-            assertMove(&p->moves[2], p->y, p->x, mods[3][0], mods[3][1]); /*BACK_LEFT*/
-            assertMove(&p->moves[3], p->y, p->x, mods[2][0], mods[2][1]); /*BACK_RIGHT*/
-        } else {
-            resetMove(&p->moves[2]);
-            resetMove(&p->moves[3]);
-        }
+    assertMove(&(p->moves[dir]), p->y, p->x, delta[d][0], delta[d][1]);
+
+    if (force_eat) {
+        if (p->moves[dir].hit.piece == VOID_CELL) resetMove(&(p->moves[dir]));
+        else force_eat = 1;
     }
 }
 
-void calculateAll(int team) {
-    int i;
-    Piece *p;
-    for (i=0; i<22; i++) {
-       p = getPiece(i);
-       if (p != NULL) {
-          if (getTeam(p) == team) calculate(p);
-       }
+void calculateMoves(int team) {
+    force_eat = -1;
+
+    loop_all: { /* Un etichetta per evitare di riscrivere lo stesso codice 2 volte, intercettata dalla seconda volta da "goto loop_all;" */
+        int i, j;
+        for (i=0; i<22; i++) {
+            Piece *p = getPiece(i);
+            if (getTeam(p) != team) continue;
+
+            for (j=0; j<4; j++) {
+                resetMove(&(p->moves[j]));
+                if (!isPromoted(p) && j > 1) continue;
+                calc(p, j);
+            }
+        }
+    };
+
+    if (force_eat < 0) {
+        force_eat = 0;
+        goto loop_all; /* Lo stesso principio dell'istruzione "j" in architettura degli elaboratori (salto incondizionato)  */
     }
 }
 
@@ -152,6 +151,7 @@ void move(Piece *p, int i) {
 
     if (getTeam(p) == CPU_TEAM && p->y == 6) promote(p);
     if (getTeam(p) == USR_TEAM && p->y == 0) promote(p);
+    force_eat = -1;
 
     if (p->moves[i].hit.piece == VOID_CELL) return;
     if (!isDisposed(getPiece(p->moves[i].hit.piece))) {

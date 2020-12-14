@@ -4,16 +4,10 @@
 /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 /**
- * Calcola tutte le mosse legali che una pedina puo' fare
- * @param p Il puntatore alla pedina
- */
-void calculate(Piece *p);
-
-/**
  * Calcola tutte le mosse legali di ogni pedina di uno dei 2 team
  * @param team Il valore del team di cui calcolare le mosse (CPU_TEAM, USR_TEAM)
  */
-void calculateAll(int team);
+void calculateMoves(int team);
 
 /**
  * Clona il contenuto della mossa A alla mossa B
