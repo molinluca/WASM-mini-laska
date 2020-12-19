@@ -1,8 +1,22 @@
+/** @module util/engine */
 const wasm = require("webassembly");
 import * as util   from "./types.mjs"
 import * as worker from "./worker.mjs";
 
-const INT  = 4;
+/**
+ * Il valore (in BYTES) per la dimensione di un intero.
+ * Viene usato da alcune funzioni che accedono alla memoria del motore di gioco per prendere i valori dei buffer un intero per volta
+ * @type {number}
+ */
+const INT = 4;
+
+/**
+ * Contiene la maggiorparte dei dati del motore di gioco, a partire dal link delle varie funzioni esposte (da `link.c`)
+ * fino alla memoria occupata dalla stessa.
+ * Inoltre presenta una struttura dati che contiene lo stato del gioco in esecuzione `(tipo, turno, pedina selezionata, finito?)`
+ *
+ * @type {{game: {is_ended: boolean, focus: any, turn: any, type: any}, mem: object, link: object}}
+ */
 const self = {
    mem: undefined,
    link: undefined,
@@ -17,10 +31,11 @@ const self = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Carica il file compilato da ANSI C in WASM e prepara il motore di gioco
- * @param bin il percorso del file .wasm
+ * Carica il file compilato `(.wasm)` del motore di gioco. Se tutto va a buon fine genera anche i vari gestori di input delle
+ * varie celle della scacchiera
+ * @param {string} bin il percorso del file .wasm
  * @returns {Promise<void>} Non ha ritorno, ma la sua esecuzione deve essere gestita in maniera asincrona
- * @throws {Error} Se il file compilato del motore di gioco e` incompatibile o corrotto (o non esiste)
+ * @throws {Error} Se il file compilato del motore di gioco e' incompatibile o corrotto (o non esiste)
  */
 export async function load(bin) {
    let module = await wasm.load(bin);
@@ -37,8 +52,8 @@ export async function load(bin) {
 
 /**
  * Crea un'istanza di gioco e la mostra a video per lasciar giocare l'utente
- * @param type Tipologia del gioco
- * @throws {Error} Se non e` stato caricato nessun motore di gioco
+ * @param {any} type Tipologia del gioco
+ * @throws {Error} Se non e' stato caricato nessun motore di gioco
  */
 export function create_game(type) {
    if (!self.mem || !self.link) throw new Error("Engine not loaded yet... You must LOAD the binaries first!!!");
@@ -51,7 +66,13 @@ export function create_game(type) {
          self.game.type     = self.link.get_status();
          self.game.turn     = self.link.get_turn();
          self.game.is_ended = false;
+         self.game.turn     = self.link.get_turn();
+         worker.change_team_tag(self.game.turn);
          worker.fill(self.link.get_piece, self.mem);
+
+         if (type === util.STATE_GAME_PVP) document.querySelector(".game-turn").classList.remove("hidden");
+         else                              document.querySelector(".game-turn").classList.add("hidden");
+
          showGame();
          break;
 
@@ -60,7 +81,8 @@ export function create_game(type) {
 }
 
 /**
- * Distrugge la sessione di gioco (anche se non e` terminata)
+ * Termina qualsiasi sessione di gioco in corso, quindi anche se il gioco non si e' concluso, o se vi e' stata qualche incongruenza
+ * nella sua generazione, quindi nullo, lo termina ugualmente, per poi tornare all'interfaccia del menu' iniziale di gioco
  */
 export function dispose_game() {
    self.game.type     = util.STATE_GAME_NONE;
@@ -74,10 +96,13 @@ export function dispose_game() {
 
 /**
  * Aggiorna lo stato del gioco a quello corrente, dopo una mossa da parte di uno dei 2 giocatori
- * @param play_res Risultato della mossa
+ * @param {any} play_res Risultato della mossa
  */
 function update(play_res) {
    self.game.type = play_res;
+   self.game.turn = self.link.get_turn();
+
+   worker.change_team_tag(self.game.turn);
 
    switch (play_res) {
       case util.STATE_USR_NO_MOVES:
@@ -96,12 +121,14 @@ function update(play_res) {
       default: return;
    }
 
+
    self.game.is_ended = true;
 }
 
 /**
  * Chiama l'esecuzione sincrona del movimento della CPU, dopo aver atteso un piccolo delay (per l'animazione grafica)
- * @returns {Promise<void>} Nessun ritorno, ma e` meglio gestire l'esecuzione in maniera asincrona
+ * @returns {Promise<void>} Return di tipo `"dont-care"`, il suo risultato deve essere gestito da una `callback` o per lo meno atteso
+ * in una funzione asincrona
  */
 async function await_CPU() {
    document.querySelector("table").classList.add("choice");
@@ -119,10 +146,12 @@ async function await_CPU() {
 
 /**
  * Fa giocare un team, muovendo una delle sue pedine
- * @param focus La pedina selezionata
- * @param move La direzione
- * @returns {Promise<void>} Nessun ritorno, ma e` meglio gestire l'esecuzione in maniera asincrona
- * @throws {Error} Se il gioco e` gia` concluso o se i valori di pedina e direzione sono incorretti
+ * @param {any} focus La pedina selezionata
+ * @param {any} move La direzione
+ * @returns {Promise<void>} Return di tipo `"dont-care"`, il suo risultato deve essere gestito da una `callback` o per lo meno atteso
+ * in una funzione asincrona
+ * @throws {Error} Se il gioco si e' gia concluso o se gli argomenti `(focus, move)` sono `NaN` lancia un errore
+ * @note Attenzione!!! Se uno degli argomenti dovesse essere `undefined`, potrebbe essere riconosciuto come il valore `0`
  */
 async function play(focus, move) {
    if (self.game.is_ended) throw new Error("Cannot move if the game is ended!!!");
@@ -145,8 +174,8 @@ async function play(focus, move) {
 
 /**
  * Gestisce la pressione di una cella (dal mouse) in modo da concentrare l'attenzione su una pedina da muovere o in modo da muovere la stessa
- * @param piece La pedina da selezionare (non deve per forza essere definita)
- * @param move La direzione della mossa (non deve per forza essere definita)
+ * @param {any} piece La pedina da selezionare (non deve per forza essere definita)
+ * @param {any} move La direzione della mossa (non deve per forza essere definita)
  */
 async function action({piece, move}) {
    if (piece !== null || move !== null) {
@@ -167,9 +196,11 @@ async function action({piece, move}) {
 }
 
 /**
- * Gestisce la pressione del mouse recuperando dalla cella premuta i suoi attributi (pedina || direzione)
- * @param e L'elemento cliccato
- * @throws {Error} Se nessuna sessione di gioco e` in corso
+ * Gestisce la pressione del puntatore del mouse (o del tap con un touchscreen) e recupera le informazioni necessarie.
+ * In particolare se e' gia stata selezionata una pedina, se la cella interessata rappresenta una mossa possibile, tenta di eseguirla,
+ * altrimenti tenta di selezionare la pedina della cella interessata
+ * @param {any} e L'elemento cliccato
+ * @throws {Error} Se nessuna sessione di gioco e' in atto lancia un errore dichiarando che non ha trovato nessuna istanza di gioco
  */
 async function handle_click(e) {
    if (self.game.type === util.STATE_GAME_NONE) throw new Error("No game loaded yet!!!");
@@ -184,10 +215,11 @@ async function handle_click(e) {
 }
 
 /**
- * Carica le mosse di una specifica pedina per poi mostrarle a video
- * @param piece La pedina di cui calcolare le mosse
- * @note Se la pedina non puo` essere mossa, o non ci si trova nel turno adeguato, non fa nulla
- * @throws {Error} Se il valore della pedina non e` corretto
+ * Richiede al motore di gioco le possibili mosse di una specifica pedina. Siccome sono salvate in un buffer legato ad un puntatore intero,
+ * la funzione si prende cura di leggere ciascun elemento convertendoli in informazioni utili da mostrare all'utente
+ * @param {any} piece La pedina di cui calcolare le mosse
+ * @note Se la pedina non puo' essere mossa, o non ci si trova nel turno adeguato, non fa nulla
+ * @throws {Error} Se il valore della pedina e' `undefined`, `null`, `NaN` o semplicemente fuori dal range `[0-21]` lancia un errore
  */
 function load_moves(piece) {
    if (piece === undefined || piece === null) throw Error("Undefined piece");
@@ -216,8 +248,8 @@ function load_moves(piece) {
 
 
 /**
- * Mostra la schermata di gioco, sempre se ce ne sia uno attivo
- * @throws {Error} Se non c'e` nessun gioco in atto
+ * Cambia la schermata di gioco mostrando l'interfaccia di gioco (scacchiera + controlli)
+ * @throws {Error} Se nessuna sessione di gioco e' in atto lancia un errore dichiarando che non ha trovato nessuna istanza di gioco
  */
 function showGame() {
    if (self.game.type === util.STATE_GAME_NONE) throw new Error("No game instances created yet");
@@ -231,7 +263,8 @@ function showGame() {
 }
 
 /**
- * Mostra la schermata iniziale del menu di gioco
+ * Cambia la schermata di gioco mostrando il menu' di avvio
+ * @note Attenzione! Questa funzione da sola non elimina la sessione di gioco in corso!
  */
 function showMenu() {
    document.querySelector("#menu").classList.remove("inactive");

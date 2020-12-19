@@ -66,7 +66,7 @@ int minimax(int depth, short team, int alpha, int beta) {
         if (beta <= alpha) break;
     }
 
-
+    destroyList(l);
     return out;
 }
 

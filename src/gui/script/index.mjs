@@ -2,7 +2,9 @@ import * as util from "./util/types.mjs"
 import * as engine from "./util/engine.mjs"
 
 /**
- * Genera tutti i gestori di eventi per i click dei vari controlli dell'interfaccia grafica, eccetto le singole celle della scacchiera
+ * Questa funzione genera ogni gestore di input, che sia un click del puntatore del mouse o un tap sul touchscreen, per l'interazione dell'utente
+ * con i vari controlli del gioco
+ * @note Attenzione! Questa funzione NON genera i gestori di input della scacchiera
  */
 function create_handlers() {
    document.querySelector("#type1").classList.remove("inactive");
@@ -23,13 +25,14 @@ function create_handlers() {
 }
 
 /**
- * Entry point dell'esecuzione, carica il motore di gioco compilato da ANSI C e crea tutti i gestori di eventi
- * @returns {Promise<void>} Output gestito da "body.onload", che la esegue non appena ha caricato l'intero documento
+ * Si tratta dell'`entrypoint` (in alcuni linguaggi riconosciutco come `"main"`) per far si che il gioco inizializzi il motore di gioco correttamente
+ * e imposti tutti i gestori di input dei vari controlli
+ * @returns {Promise<void>} L'output viene gestito dal chiamante `document.body.onload`, che esegue il corpo della funzione non appena il documento
+ * html si e' completamente generato
  */
 async function main() {
    await engine.load("script/binary/laska.wasm");
    create_handlers();
 }
 
-/* Chiama main() non appena il documento HTML non si e` completamente caricato */
 document.body.onload = main;

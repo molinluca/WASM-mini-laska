@@ -1,37 +1,34 @@
+/** @module util/worker */
 import * as util from "./types.mjs"
 const INT = 4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Riempio la scacchiera con le pedine nelle celle corrispondenti
- * @param get_piece la funzione per recuperare il puntatore alla pedina
- * @param mem il contesto di memoria, per poter accedere al valore puntato della pedina (quella in formato buffer)
+ * Questa funzione accede agli elementi in html che compongono la scacchiera ed aggiunge i vari dischetti colorati che compongono
+ * gli strati delle torri nelle posizioni corrispondenti, prendendosi particolarmente cura di evidenziare le torri che hanno la pedina in testa
+ * promossa
+ * @param {function} get_piece la funzione (proveniente dal motore di gioco) per recuperare il puntatore alla pedina (in formato buffer)
+ * @param {object} mem il contesto di memoria, per poter accedere al valore puntato della pedina
  */
 export function fill(get_piece, mem) {
    clear();
    for (let i=0; i<22; i++) {
 
-      /* Chiamo get_piece() per recuperare il puntatore alla pedina
-       * Poi si usa la funzione mem.getInt() per prendere il dato corretto dalla pedina "bufferizzata" */
       let ptr = get_piece(i);
 
-      /* Prendo le coordinate e il contenuto della torre dalla pedina "bufferizzata" */
       let y = mem.getInt(ptr);
       let x = mem.getInt(ptr + INT);
       let tower = [mem.getInt(ptr + INT*2), mem.getInt(ptr + INT*3), mem.getInt(ptr + INT*4)];
 
-      /* Recupero la cella della scacchiera (in base alle coordinate) */
       let cell = document.querySelectorAll(".board_cell")[y*7 + x];
       if (!cell) continue;
 
       cell.setAttribute("piece", i);
 
-      /* Inserisco i dischetti colorati nella giusta cella della scacchiera */
       for (let j=0; j<3; j++) {
          if (tower[j] === util.CPU || tower[j] === util.PROMOTED_CPU)      { cell.innerHTML += '<div class="piece CPU"></div>'; }
          else if (tower[j] === util.USR || tower[j] === util.PROMOTED_USR) { cell.innerHTML += '<div class="piece USR"></div>'; }
 
-         /* Controllo che la testa della torre sia promossa.. */
          if (!(tower[j] % 2) && j === 0) cell.classList.add("promoted");
          else if (j === 0) cell.classList.remove("promoted");
       }
@@ -39,9 +36,10 @@ export function fill(get_piece, mem) {
 }
 
 /**
- * Concentra l'attenzione del giocatore sulla pedina selezionata, cambiando l'aspetto grafico della scacchiera
- * @param piece L'indice della pedina [0-21]
- * @param moves Le mosse (posizioni [0-48]) possibili alla pedina
+ * Concentra l'attenzione del giocatore sulla pedina selezionata, cambiando l'aspetto grafico della scacchiera.
+ * In particolare mette fuori fuoco le altre celle, eccetto quelle delle mosse possibili che vengono evidenziate
+ * @param {any} piece L'indice della pedina [0-21]
+ * @param {any} moves Le mosse (posizioni [0-48]) possibili alla pedina
  * @throws Error(...) se l'indice della pedina non e` numerico o se e` fuori dal range [0-21]
  */
 export function focus(moves, piece) {
@@ -67,7 +65,8 @@ export function focus(moves, piece) {
 }
 
 /**
- * Ripristina lo stato corretto di visualizzazione della scacchiera (dopo una mossa o una deselezione)
+ * Ripristina lo stato originale della scacchiera rimettendo a fuoco tutte le celle e rimuovendo l'evidenziazione
+ * delle possibili mosse della pedina selezionata precedentemente. Sia che sia stata mossa che sia stata deselezionata
  */
 export function unfocus() {
    document.querySelector("table").classList.remove("choice");
@@ -79,9 +78,10 @@ export function unfocus() {
 }
 
 /**
- * Mostra un messaggio a video che spiega lo stato finale del gioco (chi ha vinto e come)
- * @param loser Il team che ha perso il match
- * @param has_pieces_left (boolean) Un indicatore per capire se ha ancora pedine in gioco
+ * Mostra un piccolo popup, sfuocando il resto dell'interfaccia, che mostra all'utente lo stato finale del gioco.
+ * In particolare mostra il vincitore e spiega il motivo per cui l'altro ha perso
+ * @param {number} loser Il team che ha perso il match
+ * @param {boolean} has_pieces_left (boolean) Un indicatore per capire se ha ancora pedine in gioco
  */
 export function show_end_state(loser, has_pieces_left) {
    let text = "The match concluded in a <span>tie</span>... No player has <span>legal moves</span> left";
@@ -101,10 +101,27 @@ export function show_end_state(loser, has_pieces_left) {
 
    document.querySelector("#end-state .message .text").innerHTML = text;
 }
+
+export function change_team_tag(team) {
+   if (isNaN(team)) throw new Error("The 'team' parameter MUST BE A NUMBER!!");
+   let tag = document.querySelector(".game-turn");
+
+   if (team === util.CPU_TEAM) {
+      tag.classList.add("red");
+      tag.classList.remove("blue");
+      tag.innerHTML = "<b>RED TEAM</b> turn"
+   }
+
+   else {
+      tag.classList.add("blue");
+      tag.classList.remove("red");
+      tag.innerHTML = "<b>BLUE TEAM</b> turn"
+   }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/* Ad ogni ciclo prendo la cella corrispondente
- * Poi la svuoto da ogni proprieta` che e` stata settata precedentemente */
+/** Svuota ogni cella della scacchiera, in questo caso interpretata come una `flattened matrix` per ripristinare le impostazioni iniziali.
+*  Serve per svuotare il contenuto della scacchiera prima di effettuare un nuovo riempimento o prima di creare una nuova sezione pulita di gioco */
 function clear() {
    for (let i=0; i<49; i++) {
       let cell = document.querySelectorAll(".board_cell")[i];

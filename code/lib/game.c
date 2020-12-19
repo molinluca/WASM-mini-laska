@@ -10,15 +10,15 @@ void initGame(short type) {
     switch (type) {
         case STATE_GAME_PVE_EASY:
             game_state = type;
-            algorithm_depth = 0;
+            algorithm_depth = DIFF_EASY;
             break;
         case STATE_GAME_PVE_MED:
             game_state = type;
-            algorithm_depth = 4;
+            algorithm_depth = DIFF_MEDIUM;
             break;
         case STATE_GAME_PVE_HARD:
             game_state = type;
-            algorithm_depth = 9;
+            algorithm_depth = DIFF_HARD;
             break;
         case STATE_GAME_PVP:
             game_state = type;

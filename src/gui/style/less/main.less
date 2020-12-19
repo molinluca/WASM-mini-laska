@@ -497,6 +497,21 @@ body {
    filter: blur(0px) !important;
 }
 
+.container .game-turn {
+   position: fixed;
+   top: 0px;
+   left: 0px;
+   padding: 15px;
+   transition: .35s;
+
+   &.red {
+      color: @cpu;
+   }
+
+   &.blue {
+      color: @usr;
+   }
+}
 
 .hidden {
    opacity: 0;
