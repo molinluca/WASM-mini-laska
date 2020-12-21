@@ -35,7 +35,7 @@
 
 #define DIFF_EASY   (0)            /* Per non usare la ricorsione */
 #define DIFF_MEDIUM (2)            /* Difficolta` base, 2 mosse nel futuro */
-#define DIFF_HARD   (7)            /* Molto difficile, 5 mosse nel futuro */
+#define DIFF_HARD   (9)            /* Molto difficile, 9 mosse nel futuro */
 
 
 
