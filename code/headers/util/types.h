@@ -23,19 +23,19 @@
 #define INFINITY      (2147483647) /* Il MASSIMO valore per un signed int */
 
 #define STATE_NOT_MOVED     (0)    /* Placeholder per indicare un ritorno in cui nessuna pedina e` stata mossa */
-#define STATE_USR_NO_MOVES  (1)    /* Stato di FINE gioco, indica che USR non puo` muovere */
-#define STATE_CPU_NO_MOVES  (2)    /* Stato di FINE gioco, indica che CPU non puo` muovere */
+#define STATE_USR_NO_MOVES  (1)    /* Stato di FINE gioco, indica che USR non puo' muovere */
+#define STATE_CPU_NO_MOVES  (2)    /* Stato di FINE gioco, indica che CPU non puo' muovere */
 #define STATE_USR_NO_PIECES (3)    /* Stato di FINE gioco, indica che USR non ha pedine */
 #define STATE_CPU_NO_PIECES (4)    /* Stato di FINE gioco, indica che CPU non ha pedine */
 #define STATE_GAME_PVP      (10)   /* Versione BASE del gioco, Player contro Player */
 #define STATE_GAME_PVE_EASY (11)   /* Versione Player contro Computer (senza ricorsione) */
-#define STATE_GAME_PVE_MED  (12)   /* Versione Player contro Computer con media difficolta` */
-#define STATE_GAME_PVE_HARD (13)   /* Versione Player contro Computer molto difficile */
+#define STATE_GAME_PVE_MED  (12)   /* Versione Player contro Computer con media difficolta' */
+#define STATE_GAME_PVE_HARD (13)   /* Versione Player contro Computer con difficolta' molto elevata */
 #define STATE_GAME_NONE     (99)   /* Placeholder per indicare NESSUN GIOCO ATTIVO */
 
 #define DIFF_EASY   (0)            /* Per non usare la ricorsione */
-#define DIFF_MEDIUM (2)            /* Difficolta` base, 2 mosse nel futuro */
-#define DIFF_HARD   (9)            /* Molto difficile, 9 mosse nel futuro */
+#define DIFF_MEDIUM (2)            /* Media difficolta', 2 mosse nel futuro */
+#define DIFF_HARD   (9)            /* Difficolta' molto elevata, 9 mosse nel futuro */
 
 
 
