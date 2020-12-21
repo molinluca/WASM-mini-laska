@@ -106,3 +106,8 @@ export function show_choice() {
 export function hide_choice() {
    document.querySelector("#diff").classList.remove("choice-on");
 }
+
+export function toggle_inspection() {
+   document.querySelector(".container").classList.toggle("game-over");
+   document.querySelector(".container").classList.toggle("inspect");
+}

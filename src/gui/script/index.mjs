@@ -15,13 +15,14 @@ function create_handlers() {
    document.querySelector("#type3").addEventListener("click", () => { engine.create_game(util.STATE_GAME_PVE_MED); });
    document.querySelector("#type4").addEventListener("click", () => { engine.create_game(util.STATE_GAME_PVE_HARD) });
    document.querySelector(".abort").addEventListener("click", () => { engine.dispose_game(); });
-   document.querySelector(".btn").addEventListener("click",   () => { engine.dispose_game(); });
+   document.querySelector(".back").addEventListener("click",  () => { engine.dispose_game(); });
 
-   document.querySelector("#typeE").addEventListener("click",   () => { util.show_choice(); });
-   document.querySelector(".dismiss").addEventListener("click", () => { util.hide_choice(); });
-   document.querySelector("#credits").addEventListener("click", () => { util.show_credits(); });
-   document.querySelector(".close").addEventListener("click",   () => { util.hide_credits(); });
-   document.querySelector("#exit").addEventListener("click",    () => { util.quit(); });
+   document.querySelector("#typeE").addEventListener("click",           () => { util.show_choice(); });
+   document.querySelector(".dismiss").addEventListener("click",         () => { util.hide_choice(); });
+   document.querySelector("#credits").addEventListener("click",         () => { util.show_credits(); });
+   document.querySelector(".close").addEventListener("click",           () => { util.hide_credits(); });
+   document.querySelector(".inspection-tool").addEventListener("click", () => { util.toggle_inspection(); });
+   document.querySelector("#exit").addEventListener("click",            () => { util.quit(); });
 }
 
 /**

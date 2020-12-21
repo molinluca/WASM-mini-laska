@@ -19,7 +19,7 @@
          <div id="typeE" class="menu-item inactive"><strong>Player vs Computer</strong></div>
          <!-- <div id="type3" class="menu-item inactive"><strong>Player vs Computer</strong> (hard)</div> -->
          <br />
-         <div id="credits" class="menu-item"><strong>Credits & Info</strong></div>
+         <div id="credits" class="menu-item"><strong>Info & Credits</strong></div>
          <hr />
          <div id="exit" class="menu-item">Exit</div>
       </div>
@@ -108,7 +108,10 @@
          <div class="message">
             <div class="title">Game Over</div>
             <div class="text">The match concluded in a <span class="accent">tie</span>. No player has <span class="accent">legal moves</span> left</div>
-            <div class="confirm"><div class="btn">GO BACK</div></div>
+            <div class="confirm">
+               <div class="btn back">GO BACK</div>
+               <div class="btn inspection-tool">TOGGLE INSPECTION</div>
+            </div>
          </div>
       </div>
 
@@ -120,9 +123,52 @@
    <div id="info">
       <div class="message">
          <div class="title">Info & Credits</div>
-         <div class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid consequatur doloremque dolorum eos fugit iste modi nobis quam rem repellat.</div>
+         <div class="text">
+            <span>Info:</span>
+            <p style="margin-left: 1em; text-align: justify;">
+               You can choose between several game types...<br>
+               Play against another player choosing the <span>PvP</span>
+               game type or challenge yourself against a <span>CPU bot</span> with 3 main difficulties.<br><br>
+               Then to play (when you open a game session) you have just to <span>select</span> the piece to move and
+               give it a direction to go selecting one of the <span>marked moves</span> it can do
+            </p>
+            <span>Credits:</span>
+            <div style="margin-left: 1em; margin-top: 1em; text-align: justify;">
+               This game has been developed by:
+               <ul>
+                  <li>Inga Chicu</li>
+                  <li>Luca Molin</li>
+                  <li>Massimo Vettori</li>
+               </ul>
+            </div>
+         </div>
          <div class="confirm"><div class="close">GOT IT</div></div>
       </div>
    </div>
+
+               <!--   <div id="info">-->
+<!--      <div class="message">-->
+<!--         <div class="title">Info & Credits</div>-->
+<!--         <div class="text">-->
+<!--            <span>Info</span>-->
+<!--            <p>-->
+<!--               You can choose between several game types... You can play against another player choosing the <span>PvP</span>-->
+<!--               game type or challenge yourself against a <span>CPU bot</span> with 3 main difficulties.<br>-->
+<!--            </p>-->
+<!--            <span>Info</span>-->
+<!--            <p>-->
+<!--               This game has been developer by:-->
+<!--               <ul>-->
+<!--                  <li>Inga Chicu</li>-->
+<!--                  <li>Luca Molin</li>-->
+<!--                  <li>Massimo Vettori</li>-->
+<!--               </ul>-->
+<!--            </p>-->
+<!--         </div>-->
+<!--   </div>-->
+<!--         </div>-->
+<!--         <div class="confirm"><div class="close">GOT IT</div></div>-->
+<!--      </div>-->
+<!--   </div>-->
 </body>
 </html>

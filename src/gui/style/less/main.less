@@ -261,6 +261,17 @@ body {
       transform: scale(1) !important;
       filter: blur(0px) !important;
    }
+
+   &.inspect>*:not(#end-state):not(table) {
+      filter: blur(10px);
+   }
+
+   &.inspect #end-state {
+      opacity: 0.5 !important;
+      visibility: visible !important;
+      transform: scale(1) !important;
+      filter: blur(0px) !important;
+   }
 }
 
 .container .abort{
@@ -347,6 +358,7 @@ body {
          transition: .5s;
          cursor: pointer;
          margin-top: 1em;
+         margin-left: 10px;
 
          &:hover {
             transform: scale(1.05);
