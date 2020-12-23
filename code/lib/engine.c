@@ -1,5 +1,6 @@
 #include "../headers/engine.h"
 
+/** Il flag che rappresenta il turno corrente della partita */
 static short game_turn = USR_TEAM;
 
 short play(short i, short dir) {

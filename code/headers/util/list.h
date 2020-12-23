@@ -1,8 +1,22 @@
 #ifndef WASM_MINI_LASKA_LIST_H
 #define WASM_MINI_LASKA_LIST_H
 
-typedef struct Node { struct Node *next; void *data; } Node;
-typedef struct List { Node *head; unsigned len; } List;
+/** Un nodo della "Linked List" */
+typedef struct Node {
+    /** Il puntatore al prossimo nodo (puo' essere NULL) */
+    struct Node *next;
+    /** Il puntatore al dato conservato dal nodo */
+    void *data;
+} Node;
+
+/** La Linked List stessa (puntatore al primo nodo + lunghezza) */
+typedef struct List {
+    /** Il puntatore al primo nodo della lista */
+    Node *head;
+    /** La lunghezza della lista (quanti nodi possiede) */
+    unsigned len;
+} List;
+
 
 /**
  * Crea una nuova lista e la restituisce

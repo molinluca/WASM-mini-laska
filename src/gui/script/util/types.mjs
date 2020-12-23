@@ -107,6 +107,11 @@ export function hide_choice() {
    document.querySelector("#diff").classList.remove("choice-on");
 }
 
+/**
+ * Quando una partita si e' conclusa, con l'apparizione della schermata riassuntiva, questa funzione
+ * modifica lo stile della schermata portando in risalto la scacchiera (in secondo piano) in modo da dare
+ * la possibilita' all'utente di capire l'esito della partita adeguatamente
+ */
 export function toggle_inspection() {
    document.querySelector(".container").classList.toggle("game-over");
    document.querySelector(".container").classList.toggle("inspect");

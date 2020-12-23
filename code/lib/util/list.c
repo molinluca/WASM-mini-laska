@@ -12,6 +12,11 @@ List *createList() {
    return l;
 }
 
+/**
+ * Crea un nuovo Nodo contenente il dato da conservare
+ * @param data Il puntatore del dato da conservare
+ * @return Il puntatore del NODO (puo' essere NULL se non lo ha creato correttamente)
+ */
 Node *createNode(void *data) {
    Node *node = malloc(sizeof(Node));
    if (node == NULL) return NULL;

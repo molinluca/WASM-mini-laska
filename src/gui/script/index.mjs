@@ -1,6 +1,5 @@
 import * as util from "./util/types.mjs"
 import * as engine from "./util/engine.mjs"
-import * as w from "./util/worker.mjs"
 
 /**
  * Questa funzione genera ogni gestore di input, che sia un click del puntatore del mouse o un tap sul touchscreen, per l'interazione dell'utente
