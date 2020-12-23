@@ -86,6 +86,8 @@ export function unfocus() {
 export function show_end_state(loser, has_pieces_left) {
    let text = "The match concluded in a <span>tie</span>... No player has <span>legal moves</span> left";
    document.querySelector(".container").classList.add("game-over");
+   document.querySelector("#end-state").removeAttribute("blue");
+   document.querySelector("#end-state").removeAttribute("red");
 
    if (loser === util.CPU_TEAM) {
       if (has_pieces_left) text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no legal moves</span> possible"

@@ -1,5 +1,6 @@
 import * as util from "./util/types.mjs"
 import * as engine from "./util/engine.mjs"
+import * as w from "./util/worker.mjs"
 
 /**
  * Questa funzione genera ogni gestore di input, che sia un click del puntatore del mouse o un tap sul touchscreen, per l'interazione dell'utente
@@ -33,6 +34,8 @@ function create_handlers() {
  */
 async function main() {
    await engine.load("script/binary/laska.wasm");
+   await util.sleep(100);
+   document.body.classList.remove("preload");
    create_handlers();
 }
 
