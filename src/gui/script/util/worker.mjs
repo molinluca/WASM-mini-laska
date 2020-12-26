@@ -136,6 +136,7 @@ function clear() {
       let cell = document.querySelectorAll(".board_cell")[i];
       cell.title = "";
       cell.classList.remove("promoted");
+      cell.classList.remove("hint");
       cell.innerHTML = "";
       cell.removeAttribute("piece");
       cell.removeAttribute("move");
