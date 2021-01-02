@@ -1,4 +1,5 @@
 #include <webassembly.h>
+#include <stdlib.h>
 #include "headers/game.h"
 
 /** Un "buffer" da 5 interi per rappresentare una pedina [y, x, tower_0, tower_1, tower_2] */
@@ -6,6 +7,8 @@ int buffered_piece[5];
 /** Un "buffer" da 8 interi per rappresentare le 4 mosse possibili di una pedina
  * [y0, x0, y1, x1, y2, x2, y3, x3]*/
 int buffered_moves[8];
+/** Un "buffer" da 11 interi per rappresentare gli "indizi" nel gioco, ovvero le pedine che possono essere mosse */
+int buffered_hint[11];
 
 /**
  * Quando viene chiamata, chiama a sua volta la funzione play(...) e ne restituisce il risultato
@@ -123,4 +126,55 @@ export int get_turn() {
  */
 export int get_status() {
     return canTeamMove(getCurrentTurn(), NULL);
+}
+
+/**
+ * Restituisce un buffer da 11 interi contenente tutti gli indici delle pedine che il giocatore puo' muovere
+ * rispetto al turno corrente.
+ * @return Il buffer degli indici delle pedine giocabili
+ * @note Quasi mai le pedine giocabili sono esattamente 11, percio' il buffer viene riempito con tanti elementi
+ * quante le pedine giocabili, mentre gli altri elementi vengono impostati a -1
+ * @note Gli indici delle pedine giocabili sono condensati all'inizio del buffer, in modo da lasciare una singola
+ * coda di -1
+ * @note In qualche caso limite nel quale la cella della List ausiliare non viene riempita, semplicente la pedina non
+ * viene conteggiata
+ */
+export int *get_hint() {
+    List *l;
+    int i, m, team;
+    for (i=0; i<11; i++) { buffered_hint[i] = -1; }
+
+    l = createList();
+    if (l == NULL) { return buffered_hint; }
+    team = getCurrentTurn();
+    calculateMoves(team);
+
+    for (i=0; i<22; i++) {
+        int flag  = 0;
+        int *hint = malloc(sizeof(int));
+        Piece *p  = getPiece(i);
+
+        if (hint == NULL)       { continue; }
+        if (p == NULL)          { continue; }
+        if (getTeam(p) != team) { continue; }
+
+        for (m=0; m<4; m++) {
+            if (isMoveLegal( &(p->moves[m]) )) { flag = 1; }
+            if (flag) { break; }
+        }
+
+
+        if (flag) {
+            *hint = i;
+            pushList(l, hint);
+        }
+
+        else {
+            free(hint);
+        }
+    }
+
+    for (i=0; i<l->len; i++) { buffered_hint[i] = *( (int *) getElementAt(l, i) ); }
+
+    return buffered_hint;
 }

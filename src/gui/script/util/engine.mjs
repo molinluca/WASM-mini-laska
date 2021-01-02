@@ -69,6 +69,7 @@ export function create_game(type) {
          self.game.turn     = self.link.get_turn();
          worker.change_team_tag(self.game.turn);
          worker.fill(self.link.get_piece, self.mem);
+         document.querySelector(".call-hint").addEventListener("click", show_hint);
 
          if (type === util.STATE_GAME_PVP) document.querySelector(".game-turn").classList.remove("hidden");
          else                              document.querySelector(".game-turn").classList.add("hidden");
@@ -245,7 +246,22 @@ function load_moves(piece) {
    else       { worker.unfocus(); self.game.focus = undefined; }
 }
 
+/**
+ * Mostra tutte le pedine giocabili del team che deve giocare in un certo momento della partita fino al prossimo
+ * turno.
+ */
+function show_hint() {
+   if (self.game.type === util.STATE_GAME_NONE) throw new Error("No game loaded yet!!!");
+   let ptr = self.link.get_hint();
 
+   for (let i=0; i<11; i++) {
+      let piece = self.mem.getInt(ptr + INT*i);
+      if (piece === -1) break;
+
+      document.querySelector(`.board_cell[piece="${piece}"]`).classList.remove("hint");
+      document.querySelector(`.board_cell[piece="${piece}"]`).classList.add("hint");
+   }
+}
 
 /**
  * Cambia la schermata di gioco mostrando l'interfaccia di gioco (scacchiera + controlli)
@@ -270,4 +286,6 @@ function showMenu() {
    document.querySelector("#menu").classList.remove("inactive");
    document.querySelector(".container").classList.add("inactive");
    document.querySelector(".container").classList.remove("game-over");
+   document.querySelector(".container").classList.remove("inspect");
+   document.querySelector(".call-hint").removeEventListener("click", show_hint);
 }
