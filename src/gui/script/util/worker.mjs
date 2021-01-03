@@ -59,7 +59,7 @@ export function focus(moves, piece) {
 
    }
 
-   document.querySelector(`.board_cell[piece="${piece}"]`).setAttribute("main", this.piece);
+   document.querySelector(`.board_cell[piece="${piece}"]`).setAttribute("main", piece);
    document.querySelector("table").classList.add("choice");
    if (!moves.length) unfocus();
 }
@@ -86,6 +86,8 @@ export function unfocus() {
 export function show_end_state(loser, has_pieces_left) {
    let text = "The match concluded in a <span>tie</span>... No player has <span>legal moves</span> left";
    document.querySelector(".container").classList.add("game-over");
+   document.querySelector("#end-state").removeAttribute("blue");
+   document.querySelector("#end-state").removeAttribute("red");
 
    if (loser === util.CPU_TEAM) {
       if (has_pieces_left) text = "The <span>BLUE PLAYER</span> won the match... The other player has <span>no legal moves</span> possible"
@@ -102,6 +104,11 @@ export function show_end_state(loser, has_pieces_left) {
    document.querySelector("#end-state .message .text").innerHTML = text;
 }
 
+/**
+ * Cambia il colore ed il testo dell'etichetta che evidenzia quale team deve giocare il turno
+ * L'etichetta ha visibilita' solo nella modalita' Giocatore vs Giocatore (PvP)
+ * @param {number} team Il team che deve giocare il turno
+ */
 export function change_team_tag(team) {
    if (isNaN(team)) throw new Error("The 'team' parameter MUST BE A NUMBER!!");
    let tag = document.querySelector(".game-turn");
@@ -120,13 +127,16 @@ export function change_team_tag(team) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** Svuota ogni cella della scacchiera, in questo caso interpretata come una `flattened matrix` per ripristinare le impostazioni iniziali.
-*  Serve per svuotare il contenuto della scacchiera prima di effettuare un nuovo riempimento o prima di creare una nuova sezione pulita di gioco */
+/**
+ * Svuota ogni cella della scacchiera, in questo caso interpretata come una `flattened matrix` per ripristinare le impostazioni iniziali.
+ * Rappresenta il modo piu' rapido per svuotare il contenuto della scacchiera prima di effettuare un nuovo riempimento o prima di creare una nuova sessione pulita di gioco
+ */
 function clear() {
    for (let i=0; i<49; i++) {
       let cell = document.querySelectorAll(".board_cell")[i];
       cell.title = "";
       cell.classList.remove("promoted");
+      cell.classList.remove("hint");
       cell.innerHTML = "";
       cell.removeAttribute("piece");
       cell.removeAttribute("move");

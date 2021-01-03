@@ -1,7 +1,13 @@
 #include "../headers/control.h"
 
+/** Un "flag" per determinare la possibilita' di forzare la conquista di una pedina nel calcolo delle mosse */
 static int force_eat = -1;
 
+/**
+ * Svuota completamente il contenuto di una mossa passata come argomento (le coordinate [-1, -1] indicano una
+ * posizione sicuramente FUORI dalla scacchiera)
+ * @param m Il PUNTATORE alla mossa (Move*)
+ */
 void resetMove(Move *m) {
     if (m == NULL) return;
     m->start.y   = -1;
@@ -22,6 +28,13 @@ short isMoveLegal(Move *m) {
     return 0;
 }
 
+/**
+ * Determina se 2 pedine in particolare appartengono a team diversi fra loro.
+ * @param a L'indice della pedina A
+ * @param b L'indice della pedina B
+ * @return 1 - Le pedine sono di 2 team diversi
+ * @return 0 - Le pedine appartengono allo stesso team
+ */
 int areEnemies(int a, int b) {
     Piece *pa, *pb;
     if (a < 0 || a > 21 || b < 0 || b > 21) return 0;
@@ -31,6 +44,15 @@ int areEnemies(int a, int b) {
     return getTeam(pa) != getTeam(pb);
 }
 
+/**
+ * Prova a validare una mossa in base agli argomenti passati, se gli argomenti dovessero creare una mossa non valida,
+ * quest'ultima viene svuotata completamente
+ * @param m Il PUNTATORE alla mossa (Move*)
+ * @param y La posizione iniziale della pedina (Y)
+ * @param x La posizione iniziale della pedina (X)
+ * @param modY Il valore di spostamento in Y della pedina (-1 | 1)
+ * @param modX Il valore di spostamento in X della pedina (-1 | 1)
+ */
 void assertMove(Move *m, int y, int x, int modY, int modX) {
     int ny, nx, nny, nnx;
     if (m == NULL) return;
@@ -93,6 +115,11 @@ short clonePiece(Piece *clone, Piece *original) {
     return 1;
 }
 
+/**
+ * Tenta di calcolare una mossa di una specifica pedina in una specifica direzione
+ * @param p Il PUNTATORE alla pedina (Piece*)
+ * @param dir La direzione della mossa
+ */
 void calc(Piece *p, int dir) {
     int delta[4][2] = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
     int d;

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "headers/game.h"
 
+/**
+ * Funzione usata durante i test, serve semplicemente a stampare gli indici delle varie pedine
+ * nelle loro posizioni corrispondenti nella scacchiera
+ */
 void prt() {
     int i, j;
     for (i=0; i<7; i++) {
@@ -18,13 +22,14 @@ void prt() {
     printf("\n\n");
 }
 
+/**
+ * Funzione creata per eseguire ogni test necessario
+ */
 void run_test() {
     /* Run all needed tests of the new features */
 }
 
 int main() {
-    reset();
     run_test();
-    printf("Everything works... press ENTER to quit\n");
     return 0;
 }

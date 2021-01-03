@@ -1,6 +1,8 @@
 #include "../headers/board.h"
 
+/** La scacchiera, una matrice 7x7 di struct Cell, accessibile unicamente da questo livello del motore di gioco */
 static Cell  board[7][7];
+/** Le pedine del gioco, gestite in un array di 22 pedine, accessibili unicamente da questo livello del motore di gioco */
 static Piece pieces[22];
 
 void reset() {

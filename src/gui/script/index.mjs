@@ -33,6 +33,8 @@ function create_handlers() {
  */
 async function main() {
    await engine.load("script/binary/laska.wasm");
+   await util.sleep(100);
+   document.body.classList.remove("preload");
    create_handlers();
 }
 

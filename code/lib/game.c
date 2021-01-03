@@ -30,6 +30,12 @@ void initGame(short type) {
     resetTurn();
 }
 
+/**
+ * Aggiorna il flag di stato del gioco tramite gli argomenti passati
+ * @param team Il valore del team che deve muovere il prossimo turno
+ * @param canMove Un boolean-like per rappresentare se quel team ha possibilita' di muovere o meno
+ * @return - Lo stato aggiornato del gioco
+ */
 short updateState(short team, short canMove){
     if(game_state>=10 && game_state<=13){
         if(team==USR_TEAM){

@@ -43,6 +43,8 @@ body {
    color: @color;
    background-color: @bg;
    animation: bgmove 75s linear infinite;
+   overflow: hidden;
+   transition: .5s ease;
    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23dbdbdb' fill-opacity='0.4'%3E%3Cpath fill-rule='evenodd' d='M0 0h40v40H0V0zm40 40h40v40H40V40zm0-40h2l-2 2V0zm0 4l4-4h2l-6 6V4zm0 4l8-8h2L40 10V8zm0 4L52 0h2L40 14v-2zm0 4L56 0h2L40 18v-2zm0 4L60 0h2L40 22v-2zm0 4L64 0h2L40 26v-2zm0 4L68 0h2L40 30v-2zm0 4L72 0h2L40 34v-2zm0 4L76 0h2L40 38v-2zm0 4L80 0v2L42 40h-2zm4 0L80 4v2L46 40h-2zm4 0L80 8v2L50 40h-2zm4 0l28-28v2L54 40h-2zm4 0l24-24v2L58 40h-2zm4 0l20-20v2L62 40h-2zm4 0l16-16v2L66 40h-2zm4 0l12-12v2L70 40h-2zm4 0l8-8v2l-6 6h-2zm4 0l4-4v2l-2 2h-2z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
@@ -488,6 +490,37 @@ body {
    }
 }
 
+.call-hint {
+   position: fixed;
+   bottom: 20px;
+   left: 20px;
+   padding: 15px;
+   transition: .35s;
+   font-size: .75em;
+   border-radius: 10px;
+   user-select: none;
+   cursor: pointer;
+
+   background: rgba(255, 166, 0, 0.1);
+   color: rgb(226, 102, 0);
+
+   &:hover {
+      transform: scale(1.05);
+   }
+
+   &:active {
+      transform: scale(0.95);
+      opacity: 0.75;
+      transition: 0.15s;
+   }
+}
+
+.hint { 
+   animation: hint 2s infinite;
+   transition: .5s ease;
+   // background: rgba(231, 161, 31, 0.15)  !important;
+   // border-color: rgba(231, 161, 31, 0.3) !important;
+}
 
 
 @keyframes bgmove {
@@ -495,9 +528,15 @@ body {
    to   { background-position: 1600px 900px; }
 }
 
-@keyframes board {
+@keyframes board  {
    from { opacity: 0; filter: blur(5px); transform: scale(1.1); }
    to   { opacity: 1; filter: blur(0px); transform: scale(1); }
+}
+
+@keyframes hint  {
+   0%   { background: @cell; border-color: @cell-b; }
+   50%  { background: rgba(231, 161, 31, 0.15); border-color: rgba(231, 161, 31, 0.3); }
+   100% { background: @cell; border-color: @cell-b; }
 }
 
 
@@ -528,4 +567,11 @@ body {
 .hidden {
    opacity: 0;
    visibility: hidden;
+}
+
+.preload {
+   opacity: 0 !important;
+   * {
+      transition: 0s !important;
+   }
 }
